@@ -1,0 +1,15 @@
+﻿<NavigationWindow x:Class="LanProject.InitSetup.Initialization.Navigtion"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:LanProject.InitSetup.Initialization"
+        mc:Ignorable="d" ResizeMode="CanMinimize" ShowsNavigationUI="False"
+        Title="首次設定" WindowStartupLocation="CenterScreen"
+        Closing="NavigationWindow_Closing"
+        Navigating="NavigationWindow_Navigating"
+        Navigated="NavigationWindow_Navigated"
+        Source="pack://application:,,,/InitSetup/Initialization/Pages/SelectPath.xaml"
+        Height="400" Width="700" />
+
+

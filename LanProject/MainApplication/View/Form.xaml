@@ -1,0 +1,445 @@
+﻿<UserControl x:Class="LanProject.MainApplication.View.Form"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:LanProject.MainApplication.View"
+             xmlns:fa="http://schemas.fontawesome.io/icons/"
+             xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+             xmlns:model="clr-namespace:LanProject.MainApplication.Model"
+             xmlns:behavior="clr-namespace:LanProject.MainApplication.ValidationExceptionBehavior"
+             xmlns:transition="clr-namespace:LanProject.MainApplication.View.Transition"
+             xmlns:wpf="clr-namespace:CefSharp.Wpf;assembly=CefSharp.Wpf" xmlns:xctk="http://schemas.xceed.com/wpf/xaml/toolkit"
+             mc:Ignorable="d" 
+             d:DesignHeight="450" d:DesignWidth="800">
+    <UserControl.Resources>
+        <Style TargetType="CheckBox" BasedOn="{StaticResource CheckBoxStyle1}" />
+
+
+        <Style x:Key="gridPreviewButton" TargetType="Button" BasedOn="{StaticResource gridEditButton}">
+            <Setter Property="Background" Value="#F7971E" />
+            <Setter Property="BorderBrush" Value="#FFD200" />
+            <Style.Triggers>
+                <Trigger Property="IsMouseOver" Value="True">
+                    <Setter Property="Background" Value="#FFD200" />
+                    <Setter Property="Cursor" Value="Hand" />
+                </Trigger>
+            </Style.Triggers>
+        </Style>
+        <Style x:Key="gridDownloadButton" TargetType="Button" BasedOn="{StaticResource gridEditButton}">
+            <Setter Property="Background" Value="#FFE000" />
+            <Setter Property="BorderBrush" Value="#799F0C" />
+            <Style.Triggers>
+                <Trigger Property="IsMouseOver" Value="True">
+                    <Setter Property="Background" Value="#799F0C" />
+                    <Setter Property="Cursor" Value="Hand" />
+                </Trigger>
+            </Style.Triggers>
+        </Style>
+        <DataTemplate DataType="{x:Type model:CreateFormNotificationMessage}">
+            <StackPanel Margin="20" >
+                <transition:Index/>
+            </StackPanel>
+        </DataTemplate>
+        <DataTemplate DataType="{x:Type model:DeleteInfoNotificationMessage}">
+            <StackPanel MinWidth="300" Margin="20">
+                <TextBlock Text="{Binding Title}" Style="{StaticResource MaterialDesignSubtitle1TextBlock}" />
+                <TextBlock Text="{Binding Message}" Margin="0,10,0,20" Style="{StaticResource MaterialDesignSubtitle1TextBlock}"/>
+                <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
+                    <Button x:Name="Delete" Width="75" Content="確認" Click="Delete_Click"  Margin="0,0,10,0"
+                                Style="{StaticResource MaterialDesignOutlinedButton}"
+                                Command="{ x:Static materialDesign:DialogHost.CloseDialogCommand}" />
+                    <Button Width="75" Content="取消"
+                                Style="{StaticResource MaterialDesignOutlinedButton}"
+                                Command="{ x:Static materialDesign:DialogHost.CloseDialogCommand}" />
+                </StackPanel>
+            </StackPanel>
+        </DataTemplate>
+        <DataTemplate DataType="{x:Type model:EditFormNotificationMessage}">
+            <StackPanel Margin="20" >
+                <transition:EditIndex/>
+            </StackPanel>
+        </DataTemplate>
+        <DataTemplate DataType="{x:Type model:FormDetailNotificationMessage}">
+            <StackPanel MinWidth="450" Margin="20">
+                <TextBlock Foreground="#362f54" TextAlignment="Center" Margin="15" FontSize="34" FontWeight="SemiBold" Text="{Binding Source.ID,StringFormat={} 表單ID {0},UpdateSourceTrigger=PropertyChanged}"/>
+                <Grid MinWidth="220">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="*" />
+                        <RowDefinition  Height="Auto" />
+                    </Grid.RowDefinitions>
+                    <StackPanel Grid.Row="0">
+                        <Expander HorizontalAlignment="Stretch" Header="編輯紀錄" Style="{StaticResource MaterialDesignExpander}" Foreground="{StaticResource MaterialDesignBody}">
+                            <TreeView ItemsSource="{Binding DisplayItemRecord}" Cursor="Hand" FontSize="16" Margin="10">
+                                <TreeView.Resources>
+                                    <HierarchicalDataTemplate DataType="{x:Type model:UnitEditRecord}" ItemsSource="{Binding Details}">
+                                        <HierarchicalDataTemplate.Triggers>
+                                            <DataTrigger Binding="{Binding Action}" Value="編輯表單">
+                                                <DataTrigger.Setters>
+                                                    <Setter TargetName="Actioning" Property="TextBlock.Foreground" Value="PaleVioletRed" />
+                                                </DataTrigger.Setters>
+                                            </DataTrigger>
+                                        </HierarchicalDataTemplate.Triggers>
+                                        <StackPanel Orientation="Horizontal" Margin="3,2">
+
+                                            <TextBlock Text="{Binding User,UpdateSourceTrigger=PropertyChanged}" Foreground="RoyalBlue"/>
+                                            <TextBlock Text=" 於 " />
+                                            <TextBlock Text="{Binding ActionTime}" Foreground="Black"/>
+                                            <TextBlock x:Name="Actioning" Text="{Binding Action,StringFormat={} {0}}" Foreground="DarkViolet"/>
+                                        </StackPanel>
+                                    </HierarchicalDataTemplate>
+                                    <DataTemplate DataType="{x:Type model:Detail}">
+                                        <DataTemplate.Triggers>
+                                            <DataTrigger Binding="{Binding Oldvalue}" Value="新增">
+                                                <DataTrigger.Setters>
+                                                    <Setter TargetName="oldvalue" Property="TextBlock.Foreground" Value="Green"></Setter>
+                                                    <Setter TargetName="oldvalue" Property="TextBlock.TextDecorations" Value="None"></Setter>
+                                                </DataTrigger.Setters>
+                                            </DataTrigger>
+                                        </DataTemplate.Triggers>
+
+                                        <StackPanel Orientation="Horizontal" Margin="50 0">
+                                            <TextBlock Text="{Binding Property}" Margin="3 2"/>
+                                            <materialDesign:PackIcon Kind="Equal" VerticalAlignment="Center" Margin="3 2"/>
+                                            <TextBlock x:Name="oldvalue" Text="{Binding Oldvalue}" Margin="3 2" TextDecorations="Strikethrough" Foreground="Red"/>
+                                            <materialDesign:PackIcon Kind="ArrowRightBox" VerticalAlignment="Center" Foreground="IndianRed" Margin="3 2"/>
+                                            <TextBlock Text="{Binding Newvalue}" Margin="3 2"/>
+                                        </StackPanel>
+                                    </DataTemplate>
+                                    <DataTemplate DataType="{x:Type model:ProductDetail}">
+                                        <TreeViewItem Header="{Binding Name}">
+                                            <Grid TextElement.FontSize="10" TextElement.FontStyle="Italic" Margin="8 0 0 0">
+                                                <Grid.RowDefinitions>
+                                                    <RowDefinition Height="Auto" />
+                                                    <RowDefinition Height="Auto" />
+                                                </Grid.RowDefinitions>
+                                                <Grid.ColumnDefinitions>
+                                                    <ColumnDefinition Width="Auto" />
+                                                    <ColumnDefinition Width="Auto" />
+                                                    <ColumnDefinition Width="Auto" />
+                                                    <ColumnDefinition Width="Auto" />
+                                                </Grid.ColumnDefinitions>
+                                                <TextBlock Text="長度" />
+                                                <TextBlock Grid.Column="1" Margin="3 0 0 0" Text="{Binding Length, StringFormat={}{0}AU}" />
+                                                <TextBlock Grid.Row="1" Text="寬度" />
+                                                <TextBlock Grid.Row="1" Grid.Column="1" Margin="3 0 0 0" Text="{Binding Width, StringFormat={}{0}AU}" />
+                                                <TextBlock Grid.Column="2" Text="鐵模單價" Margin="12 0 0 0" />
+                                                <TextBlock Grid.Column="3"  Margin="3 0 0 0" Text="{Binding Ironmold, StringFormat={}{0}km/s}" />
+                                            </Grid>
+                                        </TreeViewItem>
+                                    </DataTemplate>
+                                </TreeView.Resources>
+                            </TreeView>
+                        </Expander>
+                        <Border Style="{StaticResource HorizontalDividerBorder}" />
+                    </StackPanel>
+
+                </Grid>
+                <Button Content="關閉" Width="75" Margin="10" HorizontalAlignment="Center"
+                    Style="{StaticResource MaterialDesignPaperDarkButton}"
+                    Command="{ x:Static materialDesign:DialogHost.CloseDialogCommand}" />
+            </StackPanel>
+        </DataTemplate>
+        <DataTemplate DataType="{x:Type model:PDFViewerNotificationMessage}">
+            <Grid>
+                <Grid.Resources>
+                    <Style x:Key="CloseButton" TargetType="Border">
+                        <Setter Property="Background" Value="#F7971E" />
+                        <Setter Property="BorderBrush" Value="#FFD200" />
+                        <Style.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter Property="Background" Value="#FFD200" />
+                                <Setter Property="Cursor" Value="Hand" />
+                            </Trigger>
+                        </Style.Triggers>
+                    </Style>
+                </Grid.Resources>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="auto"/>
+                    <RowDefinition Height="*"/>
+                </Grid.RowDefinitions>
+                <Border Style="{StaticResource CloseButton}" MouseDown="Border_MouseDown" CornerRadius="10" BorderThickness="1" BorderBrush="Black" Width="32" Height="32" HorizontalAlignment="Right" Margin="10">
+                    <materialDesign:PackIcon Kind="Close" Margin="5" Width="32" Height="32" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                </Border>
+                <wpf:ChromiumWebBrowser Grid.Row="1" Address="{Binding Url,UpdateSourceTrigger=PropertyChanged}" Width="1500" Height="900"/>
+            </Grid>
+        </DataTemplate>
+        <DataTemplate DataType="{x:Type model:FormSearchNotificationMessage}">
+            <StackPanel MinHeight="500" Width="800">
+                <Grid Margin="10">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="9*" />
+                        <ColumnDefinition Width="1*" />
+                    </Grid.ColumnDefinitions>
+                    <TextBlock Grid.Column="0" Text="{Binding Title}" Style="{StaticResource MaterialDesignHeadline4TextBlock}" />
+                    <Button Grid.Column="1" Style="{StaticResource MaterialDesignIconForegroundButton}" HorizontalAlignment="Right"
+                        Command="{x:Static materialDesign:DialogHost.CloseDialogCommand}">
+                        <materialDesign:PackIcon Kind="Close" />
+                    </Button>
+                </Grid>
+                <StackPanel Background="{StaticResource AttentionToActionBrush}" Margin="20 10">
+                    <TextBlock Text="日期搜尋" Style="{StaticResource MaterialDesignHeadline6TextBlock}" HorizontalAlignment="Center"/>
+                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Margin="10">
+                        <RadioButton IsChecked="{Binding DateFilter.Nix,UpdateSourceTrigger=PropertyChanged}" Content="無" Margin="10" GroupName="datetype" Style="{StaticResource MaterialDesignUserForegroundRadioButton}"/>
+                        <RadioButton x:Name="before" Content="以前" Margin="10" IsChecked="{Binding DateFilter.Before,UpdateSourceTrigger=PropertyChanged}" GroupName="datetype" Style="{StaticResource MaterialDesignUserForegroundRadioButton}"/>
+                        <RadioButton x:Name="range" Content="範圍" Margin="10" IsChecked="{Binding DateFilter.Range,UpdateSourceTrigger=PropertyChanged}" GroupName="datetype" Style="{StaticResource MaterialDesignUserForegroundRadioButton}"/>
+                        <RadioButton x:Name="after" Content="以後" Margin="10" IsChecked="{Binding DateFilter.After,UpdateSourceTrigger=PropertyChanged}" GroupName="datetype" Style="{StaticResource MaterialDesignUserForegroundRadioButton}"/>
+                    </StackPanel>
+                    <StackPanel Visibility="{Binding ElementName=before,Path=IsChecked,Converter={StaticResource BoolToVis}}">
+                        <DatePicker SelectedDateFormat="Long" Width="150" SelectedDate="{Binding DateFilter.BeginTime,UpdateSourceTrigger=PropertyChanged}" Loaded="DatePicker_Loaded" Style="{StaticResource MaterialDesignFilledDatePicker}" Margin="10"/>
+                    </StackPanel>
+                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Visibility="{Binding ElementName=range,Path=IsChecked,Converter={StaticResource BoolToVis}}">
+                        <DatePicker SelectedDateFormat="Long" Width="150" SelectedDate="{Binding DateFilter.BeginTime}" Loaded="DatePicker_Loaded" Style="{StaticResource MaterialDesignFilledDatePicker}" Margin="10"/>
+                        <TextBlock Text="至" VerticalAlignment="Center"/>
+                        <DatePicker SelectedDateFormat="Long" Width="150" SelectedDate="{Binding DateFilter.EndTime}" Loaded="DatePicker_Loaded" Style="{StaticResource MaterialDesignFilledDatePicker}" Margin="10"/>
+                    </StackPanel>
+                    <StackPanel Visibility="{Binding ElementName=after,Path=IsChecked,Converter={StaticResource BoolToVis}}">
+                        <DatePicker SelectedDateFormat="Long" Width="150" SelectedDate="{Binding DateFilter.BeginTime}" Loaded="DatePicker_Loaded" Style="{StaticResource MaterialDesignFilledDatePicker}" Margin="10"/>
+                    </StackPanel>
+                </StackPanel>
+                <StackPanel Background="{StaticResource AttentionToActionBrush}" Margin="20 10">
+                    <TextBlock Text="表單類別搜尋" Style="{StaticResource MaterialDesignHeadline6TextBlock}" HorizontalAlignment="Center"/>
+                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Margin="10">
+                        <RadioButton Content="無" IsChecked="{Binding TypeFilter.Nix,UpdateSourceTrigger=PropertyChanged}" Margin="10" GroupName="formtp" Style="{StaticResource MaterialDesignUserForegroundRadioButton}"/>
+                        <RadioButton Content="報價單" Margin="10" IsChecked="{Binding TypeFilter.T1,UpdateSourceTrigger=PropertyChanged}" GroupName="formtp" Style="{StaticResource MaterialDesignUserForegroundRadioButton}"/>
+                        <RadioButton Content="請款單" Margin="10" IsChecked="{Binding TypeFilter.T2,UpdateSourceTrigger=PropertyChanged}" GroupName="formtp" Style="{StaticResource MaterialDesignUserForegroundRadioButton}"/>
+                    </StackPanel>
+                </StackPanel>
+                <StackPanel Background="{StaticResource AttentionToActionBrush}" Margin="20 10">
+                    <TextBlock Text="地點搜尋" Style="{StaticResource MaterialDesignHeadline6TextBlock}" HorizontalAlignment="Center"/>
+                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Margin="10">
+                        <RadioButton Content="無" IsChecked="{Binding LocationFilter.Nix,UpdateSourceTrigger=PropertyChanged}" Margin="10" GroupName="lotp" Style="{StaticResource MaterialDesignUserForegroundRadioButton}"/>
+                        <RadioButton Content="工程地點" Margin="10" IsChecked="{Binding LocationFilter.Have,UpdateSourceTrigger=PropertyChanged}" GroupName="lotp" Style="{StaticResource MaterialDesignUserForegroundRadioButton}"/>
+                    </StackPanel>
+                    <Border Visibility="{Binding LocationFilter.Have,Converter={StaticResource BoolToVis}}" BorderBrush="{StaticResource AttentionToActionBrush}"
+                            BorderThickness="1" CornerRadius="20" Margin="10">
+                        <Grid>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="1*"/>
+                                <RowDefinition Height="*"/>
+                                <RowDefinition Height="auto"/>
+                            </Grid.RowDefinitions>
+                            <Grid Grid.Row="0">
+                                <TextBlock Text="工程地點" HorizontalAlignment="Center" Style="{StaticResource MaterialDesignBody1TextBlock}" Margin="0,10"/>
+                            </Grid>
+                            <Grid Grid.Row="1" Margin="0,10">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="5*"/>
+                                    <ColumnDefinition Width="5*"/>
+                                </Grid.ColumnDefinitions>
+                                <ComboBox Grid.Column="0" MinWidth="145" HorizontalAlignment="Center" VerticalAlignment="Center"
+                                    Style="{StaticResource MaterialDesignFilledComboBox}" materialDesign:HintAssist.Hint="縣市"
+                                    ItemsSource="{Binding LocationFilter.Country,UpdateSourceTrigger=PropertyChanged}"
+                                    materialDesign:ValidationAssist.FontSize="12">
+                                    <ComboBox.SelectedItem>
+                                        <Binding Path="LocationFilter.Location.Country" UpdateSourceTrigger="PropertyChanged" />
+                                    </ComboBox.SelectedItem>
+                                </ComboBox>
+                                <ComboBox Grid.Column="1" MinWidth="145" HorizontalAlignment="Center" VerticalAlignment="Center"
+                                Style="{StaticResource MaterialDesignFilledComboBox}" materialDesign:HintAssist.Hint="地區"
+                                ItemsSource="{Binding LocationFilter.City,UpdateSourceTrigger=PropertyChanged}"
+                                materialDesign:ValidationAssist.FontSize="12">
+                                    <ComboBox.SelectedItem>
+                                        <Binding Path="LocationFilter.Location.City" UpdateSourceTrigger="PropertyChanged" />
+                                    </ComboBox.SelectedItem>
+                                </ComboBox>
+                            </Grid>
+                            <Grid Grid.Row="2" Margin="0,25">
+                                <TextBox FontSize="16" MaxLength="40" MinWidth="300" MaxWidth="600" x:Name="workaddress"
+                                Style="{StaticResource MaterialDesignFilledTextBox}" materialDesign:HintAssist.Hint="詳細地址"
+                                materialDesign:TransitionAssist.DisableTransitions="True" 
+                                materialDesign:ValidationAssist.FontSize="12">
+                                    <TextBox.Text>
+                                        <Binding Path="LocationFilter.Location.Address" UpdateSourceTrigger="PropertyChanged" />
+                                    </TextBox.Text>
+                                </TextBox>
+                            </Grid>
+                        </Grid>
+                    </Border>
+                </StackPanel>
+                <StackPanel Background="{StaticResource AttentionToActionBrush}" Margin="20 10">
+                    <TextBlock Text="單位搜尋" Style="{StaticResource MaterialDesignHeadline6TextBlock}" HorizontalAlignment="Center"/>
+                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+                        <RadioButton Content="無" Margin="10" IsChecked="{Binding My.Nix,UpdateSourceTrigger=PropertyChanged}" GroupName="mych" Style="{StaticResource MaterialDesignUserForegroundRadioButton}"/>
+                        <RadioButton Content="選擇自單位" Margin="10" IsChecked="{Binding My.Have,UpdateSourceTrigger=PropertyChanged}" GroupName="mych" Style="{StaticResource MaterialDesignUserForegroundRadioButton}"/>
+                    </StackPanel>
+                    <StackPanel Visibility="{Binding My.Have,Converter={StaticResource BoolToVis}}" HorizontalAlignment="Center">
+                        <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+                            <TextBlock Margin="10" Text="{Binding My.Unit.Name,UpdateSourceTrigger=PropertyChanged,StringFormat={} 名稱 : {0}}" />
+                            <TextBlock Margin="10" Text="{Binding My.Unit.Cel,UpdateSourceTrigger=PropertyChanged,StringFormat={} CEL : {0}}" />
+                            <TextBlock Margin="10" Text="{Binding My.Unit.DisplayTax,UpdateSourceTrigger=PropertyChanged,StringFormat={} 統編 : {0}}" />
+                        </StackPanel>
+                        <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+                            <TextBlock Margin="10" Text="{Binding My.Unit.Tel.DisplayContact,UpdateSourceTrigger=PropertyChanged,StringFormat={} TEL : {0}}" />
+                            <TextBlock Margin="10" Text="{Binding My.Unit.Fax.DisplayContact,UpdateSourceTrigger=PropertyChanged,StringFormat={} FAX : {0}}" />
+                            <TextBlock Margin="10" Text="{Binding My.Unit.Location.DisplayAddress,UpdateSourceTrigger=PropertyChanged,StringFormat={} 地址 : {0}}" />
+                        </StackPanel>
+                    </StackPanel>
+                </StackPanel>
+                <StackPanel Background="{StaticResource AttentionToActionBrush}" Margin="20 10">
+                    <TextBlock Text="單位搜尋" Style="{StaticResource MaterialDesignHeadline6TextBlock}" HorizontalAlignment="Center"/>
+                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+                        <RadioButton Content="無" Margin="10" IsChecked="{Binding Custom.Nix,UpdateSourceTrigger=PropertyChanged}" GroupName="cuch" Style="{StaticResource MaterialDesignUserForegroundRadioButton}"/>
+                        <RadioButton Content="選擇他單位" Margin="10" IsChecked="{Binding Custom.Have,UpdateSourceTrigger=PropertyChanged}" GroupName="cuch" Style="{StaticResource MaterialDesignUserForegroundRadioButton}"/>
+                    </StackPanel>
+                    <StackPanel Visibility="{Binding Custom.Have,Converter={StaticResource BoolToVis}}" HorizontalAlignment="Center">
+                        <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+                            <TextBlock Margin="10" Text="{Binding Custom.Unit.Name,UpdateSourceTrigger=PropertyChanged,StringFormat={} 名稱 : {0}}" />
+                            <TextBlock Margin="10" Text="{Binding Custom.Unit.Cel,UpdateSourceTrigger=PropertyChanged,StringFormat={} CEL : {0}}" />
+                            <TextBlock Margin="10" Text="{Binding Custom.Unit.DisplayTax,UpdateSourceTrigger=PropertyChanged,StringFormat={} 統編 : {0}}" />
+                        </StackPanel>
+                        <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+                            <TextBlock Margin="10" Text="{Binding Custom.Unit.Tel.DisplayContact,UpdateSourceTrigger=PropertyChanged,StringFormat={} TEL : {0}}" />
+                            <TextBlock Margin="10" Text="{Binding Custom.Unit.Fax.DisplayContact,UpdateSourceTrigger=PropertyChanged,StringFormat={} FAX : {0}}" />
+                            <TextBlock Margin="10" Text="{Binding Custom.Unit.Location.DisplayAddress,UpdateSourceTrigger=PropertyChanged,StringFormat={} 地址 : {0}}" />
+                        </StackPanel>
+                    </StackPanel>
+                </StackPanel>
+                <StackPanel Background="{StaticResource AttentionToActionBrush}" Margin="20 10">
+                    <TextBlock Text="編輯人搜尋" Style="{StaticResource MaterialDesignHeadline6TextBlock}" HorizontalAlignment="Center"/>
+                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+                        <RadioButton Content="無" Margin="10" IsChecked="{Binding UserFilter.Nix,UpdateSourceTrigger=PropertyChanged}" GroupName="proch" Style="{StaticResource MaterialDesignUserForegroundRadioButton}"/>
+                        <RadioButton Content="編輯人" Margin="10" IsChecked="{Binding UserFilter.Have,UpdateSourceTrigger=PropertyChanged}" GroupName="proch" Style="{StaticResource MaterialDesignUserForegroundRadioButton}"/>
+                    </StackPanel>
+                    <xctk:CheckComboBox Visibility="{Binding UserFilter.Have,Converter={StaticResource BoolToVis},UpdateSourceTrigger=PropertyChanged}" Margin="10" MinWidth="300" ItemsSource="{Binding UserFilter.Users,UpdateSourceTrigger=PropertyChanged}"
+                         HorizontalAlignment="Center" VerticalAlignment="Center" SelectedItemsOverride="{Binding UserFilter.SelectedUsers,UpdateSourceTrigger=PropertyChanged}" />
+                </StackPanel>
+                <StackPanel Background="{StaticResource AttentionToActionBrush}" Margin="20 10">
+                    <TextBlock Text="金額搜尋" Style="{StaticResource MaterialDesignHeadline6TextBlock}" HorizontalAlignment="Center"/>
+                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Margin="10">
+                        <RadioButton IsChecked="{Binding MoneyFilter.Nix,UpdateSourceTrigger=PropertyChanged}" Content="無" Margin="10" GroupName="money" Style="{StaticResource MaterialDesignUserForegroundRadioButton}"/>
+                        <RadioButton x:Name="inner" Content="以內" Margin="10" IsChecked="{Binding MoneyFilter.Before,UpdateSourceTrigger=PropertyChanged}" GroupName="money" Style="{StaticResource MaterialDesignUserForegroundRadioButton}"/>
+                        <RadioButton x:Name="between" Content="範圍" Margin="10" IsChecked="{Binding MoneyFilter.Range,UpdateSourceTrigger=PropertyChanged}" GroupName="money" Style="{StaticResource MaterialDesignUserForegroundRadioButton}"/>
+                        <RadioButton x:Name="outer" Content="以上" Margin="10" IsChecked="{Binding MoneyFilter.After,UpdateSourceTrigger=PropertyChanged}" GroupName="money" Style="{StaticResource MaterialDesignUserForegroundRadioButton}"/>
+                    </StackPanel>
+                    <StackPanel Visibility="{Binding ElementName=inner,Path=IsChecked,Converter={StaticResource BoolToVis}}">
+                        <TextBox HorizontalContentAlignment="Center" Text="{Binding MoneyFilter.Begin, StringFormat=C0}" Margin="10" Style="{StaticResource MaterialDesignFilledTextBox}"/>
+                    </StackPanel>
+                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Visibility="{Binding ElementName=between,Path=IsChecked,Converter={StaticResource BoolToVis}}">
+                        <TextBox MinWidth="200" HorizontalContentAlignment="Center" Text="{Binding MoneyFilter.Begin, StringFormat=C0}" Margin="10" Style="{StaticResource MaterialDesignFilledTextBox}"/>
+                        <TextBlock Text="至" VerticalAlignment="Center"/>
+                        <TextBox MinWidth="200" HorizontalContentAlignment="Center" Text="{Binding MoneyFilter.End, StringFormat=C0}" Margin="10" Style="{StaticResource MaterialDesignFilledTextBox}"/>
+                    </StackPanel>
+                    <StackPanel Visibility="{Binding ElementName=outer,Path=IsChecked,Converter={StaticResource BoolToVis}}">
+                        <TextBox HorizontalContentAlignment="Center" Text="{Binding MoneyFilter.Begin,StringFormat=C0}" Margin="10" Style="{StaticResource MaterialDesignFilledTextBox}"/>
+                    </StackPanel>
+                </StackPanel>
+                
+                <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" Margin="20">
+                    <Button x:Name="ClearSearch" Margin="0,0,10,0" Width="auto" Content="一鍵清除篩選條件"
+                                Style="{StaticResource MaterialDesignOutlinedButton}" Click="ClearSearch_Click"
+                                IsEnabled="{Binding State, UpdateSourceTrigger=PropertyChanged}"/>
+                    <Button Content="關閉" Width="auto"
+                                Style="{StaticResource MaterialDesignOutlinedButton}"
+                                Command="{ x:Static materialDesign:DialogHost.CloseDialogCommand}"  />
+                </StackPanel>
+            </StackPanel>
+        </DataTemplate>
+    </UserControl.Resources>
+    <materialDesign:DialogHost DialogMargin="8" Identifier="MainDialog" Style="{StaticResource MaterialDesignEmbeddedDialogHost}" >
+        <StackPanel>
+            <DockPanel>
+                <TextBlock DockPanel.Dock="Left" Text="表單" FontSize="32" Margin="20 0" FontWeight="SemiBold" Foreground="#121518" VerticalAlignment="Center"/>
+                <Button x:Name="OpenCreateForm" Style="{StaticResource gridCreateButton}" HorizontalAlignment="Right" DockPanel.Dock="Right" VerticalAlignment="Center" Click="OpenCreateDialog_Click">
+                    <StackPanel Orientation="Horizontal">
+                        <fa:ImageAwesome Icon="Plus" VerticalAlignment="Center" Margin="0 1 8 0" Width="11" Height="11"/>
+                        <TextBlock Text="新增表單"/>
+                    </StackPanel>
+                </Button>
+                <Button x:Name="SearchButton" Style="{StaticResource gridSearchButton}" HorizontalAlignment="Right" DockPanel.Dock="Right" VerticalAlignment="Center" Click="SearchButton_Click">
+                    <StackPanel Orientation="Horizontal">
+                        <fa:ImageAwesome Icon="Search" VerticalAlignment="Center" Margin="0 1 8 0" Width="11" Height="11"/>
+                        <TextBlock Text="搜尋表單"/>
+                    </StackPanel>
+                </Button>
+            </DockPanel>
+            <!--Tab buttons-->
+            <StackPanel Orientation="Horizontal" Margin="20 10">
+                <Button x:Name="AllButton" Style="{StaticResource tabButton}" Content="全部" BorderBrush="#784FF2"/>
+                <!--<Button x:Name="SelectedButton" Style="{StaticResource tabButton}" Content="已選擇"/>
+                <Button x:Name="UnSelectButton" Style="{StaticResource tabButton}" Content="未選擇"/>-->
+            </StackPanel>
+            <Border Style="{StaticResource HorizontalDividerBorder}" Margin="15 0"/>
+            <DockPanel Margin="20">
+
+                <TextBlock DockPanel.Dock="Left" HorizontalAlignment="Left" FontSize="18" FontWeight="SemiBold" Foreground="#121518" VerticalAlignment="Center">
+                    <TextBlock.Text>
+                        <MultiBinding StringFormat="{}{0} 筆表單">
+                            <Binding Path="TotalCount" />
+                        </MultiBinding>
+                    </TextBlock.Text>
+                </TextBlock>
+
+                <TextBlock DockPanel.Dock="Right" Margin="20 0" HorizontalAlignment="Right" FontSize="13" FontWeight="SemiBold" Foreground="#121518" VerticalAlignment="Center">
+                    <TextBlock.Text>
+                        <MultiBinding StringFormat="{}第 {0} 頁 / 第 {1} 頁">
+                            <Binding Path="CurrentPage" />
+                            <Binding Path="TotalPage" />
+                        </MultiBinding>
+                    </TextBlock.Text>
+                </TextBlock>
+                <TextBlock DockPanel.Dock="Right" Margin="20 0" HorizontalAlignment="Right" FontSize="13" FontWeight="SemiBold" Foreground="#121518" VerticalAlignment="Center">
+                    <TextBlock.Text>
+                        <MultiBinding StringFormat="{}每頁顯示 {0} 筆">
+                            <Binding Path="PerPageDisplayOfCount" />
+                        </MultiBinding>
+                    </TextBlock.Text>
+                </TextBlock>
+
+            </DockPanel>
+            <Border Style="{StaticResource HorizontalDividerBorder}" Margin="15 0"/>
+            <DataGrid ItemsSource="{Binding currentPageList,UpdateSourceTrigger=PropertyChanged}" RowStyle="{DynamicResource DataGridRowStyle1}" ColumnHeaderStyle="{DynamicResource DataGridColumnHeaderStyle1}" CellStyle="{DynamicResource DataGridCellStyle1}" x:Name="membersDataGrid" Style="{DynamicResource DataGridStyle1}">
+                <DataGrid.Columns>
+                    <DataGridTextColumn Header="ID" IsReadOnly="True" CanUserResize="True" Width="auto" Binding="{Binding ID}" MinWidth="150"/>
+                    <DataGridTextColumn Header="自名稱" IsReadOnly="True" CanUserResize="True" Width="*" Binding="{Binding Myunit.Name}" MinWidth="250"/>
+                    <DataGridTextColumn Header="他名稱" IsReadOnly="True" CanUserResize="True" Width="*" Binding="{Binding Customunit.Name}" MinWidth="250"/>
+                    <DataGridTextColumn Header="狀態" IsReadOnly="True" CanUserResize="True" Width="*" MinWidth="150" Binding="{Binding DisplayType}"/>
+                    <DataGridTextColumn Header="工程縣市" IsReadOnly="True" CanUserResize="True" Width="*" MinWidth="125" Binding="{Binding Location.Country}"/>
+                    <DataGridTextColumn Header="工程地區" IsReadOnly="True" CanUserResize="True" Width="*" MinWidth="125" Binding="{Binding Location.City}"/>
+                    <DataGridTextColumn Header="工程詳細地址" IsReadOnly="True" CanUserResize="True" Width="*" MinWidth="200" Binding="{Binding Location.Address}"/>
+                    <DataGridTextColumn Header="表單總額" IsReadOnly="True" CanUserResize="True" Width="*" MinWidth="150" Binding="{Binding Total,StringFormat=NT {0:c0}}"/>
+
+                    <DataGridTemplateColumn Header="操作" IsReadOnly="True" Width="auto" MinWidth="200">
+                        <DataGridTemplateColumn.CellTemplate>
+                            <DataTemplate>
+                                <StackPanel Orientation="Horizontal">
+                                    <Button Style="{StaticResource gridEditButton}" ToolTip="編輯表單" x:Name="EditButton" Click="EditButton_Click">
+                                        <fa:ImageAwesome Icon="PencilSquareOutline" Style="{StaticResource gridButtonIcon}"/>
+                                    </Button>
+                                    <Button x:Name="DeleteButton" Margin="5 0 0 0" Style="{StaticResource gridRemoveButton}" ToolTip="刪除表單" Click="DeleteButton_Click">
+                                        <fa:ImageAwesome Icon="TrashOutline" Style="{StaticResource gridButtonIcon}"/>
+                                    </Button>
+                                    <Button x:Name="InfoButton" Margin="5 0 0 0" Style="{StaticResource gridInfoButton}" ToolTip="表單紀錄" Click="InfoButton_Click">
+                                        <fa:ImageAwesome Icon="Info" Style="{StaticResource gridButtonIcon}"/>
+                                    </Button>
+                                    <Button x:Name="previewButton" Margin="5 0 0 0" Style="{StaticResource gridPreviewButton}" ToolTip="預覽檔案" Click="previewButton_Click">
+                                        <fa:ImageAwesome Icon="Eye" Style="{StaticResource gridButtonIcon}"/>
+                                    </Button>
+                                    <Button x:Name="downloadButton" Margin="5 0 0 0" Style="{StaticResource gridDownloadButton}" ToolTip="下載檔案" Click="downloadButton_Click">
+                                        <fa:ImageAwesome Icon="Download" Style="{StaticResource gridButtonIcon}"/>
+                                    </Button>
+                                </StackPanel>
+                            </DataTemplate>
+                        </DataGridTemplateColumn.CellTemplate>
+                    </DataGridTemplateColumn>
+                </DataGrid.Columns>
+            </DataGrid>
+            <!--Pagingation Section-->
+            <Border HorizontalAlignment="Right" BorderBrush="#DEE4EC" BorderThickness="1" CornerRadius="5" Padding="5" Background="#ffffff" Margin="50 20">
+                <StackPanel Orientation="Horizontal">
+                    <Button Style="{StaticResource prevPageButton}" x:Name="PrevButton" Click="PrevButton_Click" ToolTip="上一頁">
+                        <fa:ImageAwesome Icon="ArrowCircleLeft" Style="{StaticResource pagingButtonIcon}"/>
+                    </Button>
+                    <Rectangle Width="1" Fill="#DEE4EC" Margin="3 7"/>
+
+
+
+                    <Rectangle Width="1" Fill="#DEE4EC" Margin="3 7"/>
+                    <Button Style="{StaticResource pagingButton}" x:Name="NextButton" Click="NextButton_Click" ToolTip="下一頁">
+                        <fa:ImageAwesome Icon="ArrowCircleRight" Style="{StaticResource pagingButtonIcon}"/>
+                    </Button>
+                </StackPanel>
+            </Border>
+        </StackPanel>
+    </materialDesign:DialogHost>
+</UserControl>

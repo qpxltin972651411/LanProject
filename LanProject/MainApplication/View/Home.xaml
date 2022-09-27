@@ -1,0 +1,89 @@
+﻿<UserControl x:Class="LanProject.MainApplication.View.Home"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:LanProject.MainApplication.View"
+             xmlns:lvc="clr-namespace:LiveCharts.Wpf;assembly=LiveCharts.Wpf"
+             xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+             xmlns:fa="http://schemas.fontawesome.io/icons/"
+             mc:Ignorable="d" 
+             d:DesignHeight="450" d:DesignWidth="800">
+    <Grid>
+        <materialDesign:DialogHost DialogMargin="8" Identifier="MainDialog" Style="{StaticResource MaterialDesignEmbeddedDialogHost}" >
+            <StackPanel>
+                <DockPanel>
+                    <TextBlock DockPanel.Dock="Left" Text="首頁" FontSize="32" Margin="20 0" FontWeight="SemiBold" Foreground="#121518" VerticalAlignment="Center"/>
+                </DockPanel>
+                <!--Tab buttons-->
+                <StackPanel Orientation="Horizontal" Margin="20 10">
+                    <Button x:Name="AllButton" Style="{StaticResource tabButton}" Content="數據圖表" BorderBrush="#784FF2"/>
+                </StackPanel>
+                <Border Style="{StaticResource HorizontalDividerBorder}" Margin="15 0"/>
+                <StackPanel>
+                    
+                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+                        <Border BorderThickness="1" BorderBrush="Black" Padding="10" CornerRadius="10" Margin="10">
+                            <StackPanel >
+                                <Button Content="統計區間" Style="{StaticResource MaterialDesignPaperDarkButton}" />
+                                <lvc:CartesianChart Series="{Binding CT1.SeriesCollection}" LegendLocation="Bottom" MinWidth="700" MinHeight="500">
+                                    <lvc:CartesianChart.AxisY>
+                                        <lvc:Axis Title="金額總計 $" LabelFormatter="{Binding CT1.Formatter}"/>
+                                    </lvc:CartesianChart.AxisY>
+                                    <lvc:CartesianChart.AxisX>
+                                        <lvc:Axis Title="{Binding CT1.Year,UpdateSourceTrigger=PropertyChanged,StringFormat=d}" Labels="{Binding CT1.Labels}"/>
+                                    </lvc:CartesianChart.AxisX>
+                                </lvc:CartesianChart>
+                                <TextBlock Text="報價單統計" HorizontalAlignment="Center" Margin="10"/>
+                            </StackPanel>
+                        </Border>
+                        <Border BorderThickness="1" BorderBrush="Black" Padding="10" CornerRadius="10" Margin="10">
+                            <StackPanel >
+                                <Button Content="統計區間" Style="{StaticResource MaterialDesignPaperDarkButton}" />
+                                <lvc:CartesianChart Series="{Binding CT2.SeriesCollection}" LegendLocation="Bottom" MinWidth="700" MinHeight="500">
+                                    <lvc:CartesianChart.AxisY>
+                                        <lvc:Axis Title="金額總計 $" LabelFormatter="{Binding CT2.Formatter}"/>
+                                    </lvc:CartesianChart.AxisY>
+                                    <lvc:CartesianChart.AxisX>
+                                        <lvc:Axis Title="{Binding CT2.Year,UpdateSourceTrigger=PropertyChanged,StringFormat=d}" Labels="{Binding CT2.Labels}"/>
+                                    </lvc:CartesianChart.AxisX>
+                                </lvc:CartesianChart>
+                                <TextBlock Text="請款單統計" HorizontalAlignment="Center" Margin="10"/>
+                            </StackPanel>
+                        </Border>
+                    </StackPanel>
+                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+                        <Border BorderThickness="1" BorderBrush="Black" Padding="10" CornerRadius="10" Margin="10">
+                            <StackPanel >
+                                <Button Content="統計區間" Style="{StaticResource MaterialDesignPaperDarkButton}" />
+                                <lvc:CartesianChart Series="{Binding CT3.SeriesCollection}" LegendLocation="Bottom" MinWidth="700" MinHeight="500">
+                                    <lvc:CartesianChart.AxisY>
+                                        <lvc:Axis Title="金額總計 $" LabelFormatter="{Binding CT3.Formatter}"/>
+                                    </lvc:CartesianChart.AxisY>
+                                    <lvc:CartesianChart.AxisX>
+                                        <lvc:Axis Title="{Binding CT3.Year,UpdateSourceTrigger=PropertyChanged,StringFormat=d}" Labels="{Binding CT3.Labels}"/>
+                                    </lvc:CartesianChart.AxisX>
+                                </lvc:CartesianChart>
+                                <TextBlock Text="總計" HorizontalAlignment="Center" Margin="10"/>
+                            </StackPanel>
+                        </Border>
+                        <Border BorderThickness="1" BorderBrush="Black" Padding="10" CornerRadius="10" Margin="10">
+                            <StackPanel >
+                                <Button Content="統計區間" Style="{StaticResource MaterialDesignPaperDarkButton}" />
+                                <lvc:CartesianChart Series="{Binding CT4.SeriesCollection}" LegendLocation="Bottom" MinWidth="700" MinHeight="500">
+                                    <lvc:CartesianChart.AxisY>
+                                        <lvc:Axis Title="表單數量"/>
+                                    </lvc:CartesianChart.AxisY>
+                                    <lvc:CartesianChart.AxisX>
+                                        <lvc:Axis Title="{Binding CT4.Year,UpdateSourceTrigger=PropertyChanged,StringFormat=d}" Labels="{Binding CT4.Labels}"/>
+                                    </lvc:CartesianChart.AxisX>
+                                </lvc:CartesianChart>
+                                <TextBlock Text="表單數量統計" HorizontalAlignment="Center" Margin="10"/>
+                            </StackPanel>
+                        </Border>
+                    </StackPanel>
+                </StackPanel>
+            </StackPanel>
+        </materialDesign:DialogHost>
+    </Grid>
+</UserControl>

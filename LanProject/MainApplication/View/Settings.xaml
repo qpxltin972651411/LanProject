@@ -1,0 +1,130 @@
+﻿<UserControl x:Class="LanProject.MainApplication.View.Settings"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:LanProject.MainApplication.View"
+             xmlns:fa="http://schemas.fontawesome.io/icons/"
+             xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+             xmlns:xctk="http://schemas.xceed.com/wpf/xaml/toolkit"
+             xmlns:page="clr-namespace:LanProject.MainApplication.View.Setting"
+             xmlns:MainAppModel="clr-namespace:LanProject.MainApplication.Model"
+             mc:Ignorable="d"
+             d:DesignHeight="450" d:DesignWidth="800">
+    <UserControl.Resources>
+        <Style x:Key="pageTitle" TargetType="TextBlock">
+            <Setter Property="Foreground" Value="#ffffff" />
+            <Setter Property="Grid.Row" Value="1" />
+            <Setter Property="TextAlignment" Value="Center" />
+            <Setter Property="FontSize" Value="42" />
+        </Style>
+        <Style x:Key="backButton" TargetType="Button">
+            <Setter Property="Background" Value="Transparent" />
+            <Setter Property="Foreground" Value="#ffffff" />
+            <Setter Property="Margin" Value="40 30 0 0" />
+            <Setter Property="HorizontalAlignment" Value="Left" />
+            <Setter Property="VerticalAlignment" Value="Center" />
+            <Setter Property="Panel.ZIndex" Value="1" />
+            <Setter Property="Grid.Row" Value="1" />
+            <Setter Property="FocusVisualStyle" Value="{x:Null}" />
+            <Setter Property="Visibility" Value="Collapsed" />
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border Background="{TemplateBinding Background}">
+                            <ContentPresenter VerticalAlignment="Center" HorizontalAlignment="Center"/>
+                        </Border>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+
+            <Style.Triggers>
+                <Trigger Property="IsMouseOver" Value="True">
+                    <Setter Property="Foreground" Value="#d0d0d0" />
+                    <Setter Property="Cursor" Value="Hand" />
+                </Trigger>
+            </Style.Triggers>
+        </Style>
+        <Style x:Key="richtextboxStyle" TargetType="{x:Type RichTextBox}" BasedOn="{StaticResource MaterialDesignRichTextBox}">
+            <Setter Property="BorderThickness" Value="1,1,1,1" />
+            <Style.Triggers>
+                <Trigger Property="IsMouseOver" Value="True">
+                    <Setter Property="BorderThickness" Value="1,1,1,1" />
+                </Trigger>
+            </Style.Triggers>
+        </Style>
+        <DataTemplate DataType="{x:Type MainAppModel:CreateNoteNotificationMessage}">
+            <StackPanel Margin="16">
+                <TextBlock Text="{Binding Title,UpdateSourceTrigger=PropertyChanged}" HorizontalAlignment="Center" Style="{StaticResource MaterialDesignSubtitle1TextBlock}" />
+                <StackPanel Margin="0 20 0 0" HorizontalAlignment="Center">
+                    <xctk:ColorPicker Width="50" Height="25" AvailableColorsHeader="顏色盤" StandardTabHeader="標準" AdvancedTabHeader="自訂" StandardColorsHeader="常用色盤"
+                                      x:Name="ClrPcker_Background" SelectedColorChanged="ClrPcker_Background_SelectedColorChanged" />
+                    <TextBlock Text="文字顏色" />
+                </StackPanel>
+
+                <RichTextBox x:Name="writespace" AcceptsReturn="True"  MinWidth="1000" MinHeight="500" MaxHeight="500" Margin="20" ScrollViewer.VerticalScrollBarVisibility="Visible" Style="{StaticResource richtextboxStyle}"
+                             TextChanged="writespace_TextChanged" SelectionChanged="writespace_SelectionChanged" FontSize="16"/>
+
+
+                <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
+                    <Button x:Name="SaveNote" Click="SaveNote_Click" Content="新增" IsEnabled="{Binding Allow,UpdateSourceTrigger=PropertyChanged}" Style="{StaticResource MaterialDesignPaperDarkButton}" Margin="10" Command="{ x:Static materialDesign:DialogHost.CloseDialogCommand}" />
+                    <Button Content="取消" Style="{StaticResource MaterialDesignPaperDarkButton}" Margin="10" Command="{ x:Static materialDesign:DialogHost.CloseDialogCommand}" />
+                </StackPanel>
+            </StackPanel>
+        </DataTemplate>
+        <DataTemplate DataType="{x:Type MainAppModel:EditNoteNotificationMessage}">
+            <StackPanel Margin="16">
+                <TextBlock Text="{Binding Title,UpdateSourceTrigger=PropertyChanged}" HorizontalAlignment="Center" Style="{StaticResource MaterialDesignSubtitle1TextBlock}" />
+                <StackPanel Margin="0 20 0 0" HorizontalAlignment="Center">
+                    <xctk:ColorPicker Width="50" Height="25" AvailableColorsHeader="顏色盤" StandardTabHeader="標準" AdvancedTabHeader="自訂" StandardColorsHeader="常用色盤"
+                                      x:Name="ClrPcker2_Background" SelectedColorChanged="ClrPcker2_Background_SelectedColorChanged" />
+                    <TextBlock Text="文字顏色" />
+                </StackPanel>
+
+                <RichTextBox x:Name="writespace2" Loaded="writespace2_Loaded" AcceptsReturn="True"  MinWidth="1000" MinHeight="500" MaxHeight="500" Margin="20" ScrollViewer.VerticalScrollBarVisibility="Visible" Style="{StaticResource richtextboxStyle}"
+                             TextChanged="writespace2_TextChanged"  SelectionChanged="writespace2_SelectionChanged"  FontSize="16"/>
+
+
+                <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
+                    <Button x:Name="EditNote" Click="EditNote_Click" Content="修改" IsEnabled="{Binding Allow,UpdateSourceTrigger=PropertyChanged}" Style="{StaticResource MaterialDesignPaperDarkButton}" Margin="10" Command="{ x:Static materialDesign:DialogHost.CloseDialogCommand}" />
+                    <Button Content="取消" Style="{StaticResource MaterialDesignPaperDarkButton}" Margin="10" Command="{ x:Static materialDesign:DialogHost.CloseDialogCommand}" />
+                </StackPanel>
+            </StackPanel>
+        </DataTemplate>
+    </UserControl.Resources>
+    <materialDesign:DialogHost Identifier="MainDialog" DialogTheme="Inherit">
+        <ScrollViewer VerticalScrollBarVisibility="Auto">
+            <Border CornerRadius="5">
+                <Border.Background>
+                    <LinearGradientBrush StartPoint="0.5,0" Opacity="0.8" EndPoint="0.5,1">
+                        <GradientStop Color="#3E5151"/>
+                        <GradientStop Color="#DECBA4" Offset="1.0"/>
+                    </LinearGradientBrush>
+                </Border.Background>
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="auto"/>
+                        <RowDefinition Height="auto"/>
+                        <RowDefinition Height="*"/>
+                    </Grid.RowDefinitions>
+
+                    <!--Back Button-->
+                    <Button Name="backButton" Click="backButton_Click"  Style="{StaticResource backButton}" ToolTip="返回">
+                        <fa:ImageAwesome Icon="ArrowLeft" Width="40" Height="40" Foreground="#2c3e50"/>
+                    </Button>
+
+                    <!--Page Title-->
+                    <TextBlock x:Name="titleText" Text="設定" Style="{StaticResource pageTitle}" Margin="30"/>
+
+                    <!--Page Content-->
+                    <ContentPresenter x:Name="container" Grid.Row="2">
+                        <ContentPresenter.Content>
+                            <page:Container />
+                        </ContentPresenter.Content>
+                    </ContentPresenter>
+
+                </Grid>
+            </Border>
+        </ScrollViewer>
+    </materialDesign:DialogHost>
+</UserControl>

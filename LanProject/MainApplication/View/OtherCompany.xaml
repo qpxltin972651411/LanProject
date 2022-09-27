@@ -1,0 +1,895 @@
+﻿<UserControl x:Class="LanProject.MainApplication.View.OtherCompany"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:LanProject.MainApplication.View"
+             xmlns:fa="http://schemas.fontawesome.io/icons/"
+             xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+             xmlns:model="clr-namespace:LanProject.MainApplication.Model"
+             xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
+             xmlns:domain="clr-namespace:LanProject.MainApplication.Domain"
+             xmlns:behavior="clr-namespace:LanProject.MainApplication.ValidationExceptionBehavior"
+             mc:Ignorable="d" 
+             d:DesignHeight="450" d:DesignWidth="800">
+    <i:Interaction.Behaviors>
+        <behavior:ValidationExceptionForCustomUnit />
+    </i:Interaction.Behaviors>
+    <UserControl.Resources>
+        <DataTemplate DataType="{x:Type model:CreateUnitNotificationMessage}">
+            <StackPanel Margin="20" MinWidth="500">
+                <TextBlock Text="{Binding Title}" Style="{StaticResource MaterialDesignSubtitle1TextBlock}" />
+                <TextBlock Text="{Binding Message}" Margin="10" Style="{StaticResource MaterialDesignSubtitle1TextBlock}" />
+                <StackPanel>
+                    <!--#region 名稱欄位-->
+                    <TextBox Margin="20" FontSize="16" MaxLength="20" MinWidth="300"
+                            Style="{StaticResource MaterialDesignFilledTextBox}"
+                            materialDesign:HintAssist.Hint="名稱"
+                            materialDesign:TransitionAssist.DisableTransitions="True" 
+                            materialDesign:ValidationAssist.FontSize="12">
+                        <TextBox.Text>
+                            <Binding Path="NewUnit.Name" UpdateSourceTrigger="PropertyChanged" NotifyOnValidationError="True">
+                                <Binding.ValidationRules>
+                                    <domain:NotEmptyValidationRule ValidatesOnTargetUpdated="True" />
+                                </Binding.ValidationRules>
+                            </Binding>
+                        </TextBox.Text>
+                    </TextBox>
+                    <!--#endregion-->
+                    <!--#region Cel欄位-->
+                    <TextBox FontSize="16" Margin="20" MaxLength="10" MinWidth="300"
+                            Style="{StaticResource MaterialDesignFilledTextBox}"
+                            materialDesign:HintAssist.Hint="Cel"
+                            materialDesign:TransitionAssist.DisableTransitions="True" 
+                            materialDesign:ValidationAssist.FontSize="12">
+                        <TextBox.Text>
+                            <Binding Path="NewUnit.Cel" UpdateSourceTrigger="PropertyChanged" NotifyOnValidationError="True">
+                                <Binding.ValidationRules>
+                                    <domain:CelValidationRule ValidatesOnTargetUpdated="True" />
+                                </Binding.ValidationRules>
+                            </Binding>
+                        </TextBox.Text>
+                    </TextBox>
+                    <!--#endregion-->
+                    <!--#region 統編欄位-->
+                    <Border BorderBrush="Black" BorderThickness="1" CornerRadius="20" Padding="20" Margin="20">
+                        <StackPanel>
+                            <CheckBox x:Name="ToggleTax" Style="{StaticResource CheckBoxStyle1}"
+                                    Content="有統編" HorizontalAlignment="Center"
+                                    IsChecked="{Binding NewUnit.HaveTax}" />
+                            <TextBox x:Name="Tax" FontSize="16" MaxLength="8" MinWidth="300" Style="{StaticResource MaterialDesignFilledTextBox}"
+                                    materialDesign:HintAssist.Hint="統編" Margin="0 10"
+                                    materialDesign:TransitionAssist.DisableTransitions="True" 
+                                    materialDesign:ValidationAssist.FontSize="12"
+                                    Visibility="{Binding Path=IsChecked, ElementName=ToggleTax, Converter={StaticResource BoolToVis}}"
+                                    IsEnabled="{Binding Path=IsChecked, ElementName=ToggleTax}">
+                                <TextBox.Text>
+                                    <Binding Path="NewUnit.Tax" UpdateSourceTrigger="PropertyChanged" NotifyOnValidationError="True">
+                                        <Binding.ValidationRules>
+                                            <domain:TaxValidationRule ValidatesOnTargetUpdated="True" />
+                                        </Binding.ValidationRules>
+                                    </Binding>
+                                </TextBox.Text>
+                            </TextBox>
+                        </StackPanel>
+                    </Border>
+                    <!--#endregion-->
+                    <!--#region Tel欄位-->
+                    <Border BorderBrush="Black" BorderThickness="1" CornerRadius="20" Padding="20" Margin="20">
+                        <StackPanel>
+                            <CheckBox Style="{StaticResource CheckBoxStyle1}"
+                                    x:Name="ToggleTel" Content="有Tel" HorizontalAlignment="Center"
+                                    IsChecked="{Binding NewUnit.HaveTel}" />
+                            <Grid IsEnabled="{Binding ElementName=ToggleTel,Path=IsChecked,UpdateSourceTrigger=PropertyChanged}"
+                                    Visibility="{Binding Path=IsChecked, ElementName=ToggleTel, Converter={StaticResource BoolToVis}}">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="3*"/>
+                                    <ColumnDefinition Width="1*"/>
+                                    <ColumnDefinition Width="6*"/>
+                                </Grid.ColumnDefinitions>
+                                <TextBox Grid.Column="0" FontSize="16" MaxLength="4" Margin="0 10"
+                                        Style="{StaticResource MaterialDesignFilledTextBox}"
+                                        materialDesign:HintAssist.Hint="Tel區碼"
+                                        materialDesign:ValidationAssist.FontSize="12"
+                                        materialDesign:TransitionAssist.DisableTransitions="True">
+                                    <TextBox.Text>
+                                        <Binding Path="NewUnit.Tel.AreaCode" UpdateSourceTrigger="PropertyChanged" NotifyOnValidationError="True">
+                                            <Binding.ValidationRules>
+                                                <domain:AreaCodeValidationRule ValidatesOnTargetUpdated="True" />
+                                            </Binding.ValidationRules>
+                                        </Binding>
+                                    </TextBox.Text>
+                                </TextBox>
+                                <TextBlock Text="-" Grid.Column="1" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                <TextBox Grid.Column="2" FontSize="16" MaxLength="8" Margin="0 10"
+                                        Style="{StaticResource MaterialDesignFilledTextBox}"
+                                        materialDesign:HintAssist.Hint="Tel號碼"
+                                        materialDesign:ValidationAssist.FontSize="12"
+                                        materialDesign:TransitionAssist.DisableTransitions="True">
+                                    <TextBox.Text>
+                                        <Binding Path="NewUnit.Tel.Number" UpdateSourceTrigger="PropertyChanged" NotifyOnValidationError="True">
+                                            <Binding.ValidationRules>
+                                                <domain:NumberValidationRule ValidatesOnTargetUpdated="True" />
+                                            </Binding.ValidationRules>
+                                        </Binding>
+                                    </TextBox.Text>
+                                </TextBox>
+                            </Grid>
+                        </StackPanel>
+                    </Border>
+                    <!--#endregion-->
+                    <!--#region Fax欄位-->
+                    <Border BorderBrush="Black" BorderThickness="1" CornerRadius="20" Padding="20" Margin="20">
+                        <StackPanel>
+                            <CheckBox Style="{StaticResource CheckBoxStyle1}"
+                                    x:Name="ToggleFax" HorizontalAlignment="Center" Content="有Fax" 
+                                    IsChecked="{Binding NewUnit.HaveFax}"/>
+                            <Grid IsEnabled="{Binding ElementName=ToggleFax,Path=IsChecked,UpdateSourceTrigger=PropertyChanged}"
+                                    Visibility="{Binding Path=IsChecked, ElementName=ToggleFax, Converter={StaticResource BoolToVis}}">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="3*"/>
+                                    <ColumnDefinition Width="1*"/>
+                                    <ColumnDefinition Width="6*"/>
+                                </Grid.ColumnDefinitions>
+                                <TextBox Grid.Column="0" FontSize="16" MaxLength="4" Style="{StaticResource MaterialDesignFilledTextBox}"
+                                        materialDesign:HintAssist.Hint="Fax區碼" Margin="0 10"
+                                        materialDesign:ValidationAssist.FontSize="12"
+                                        materialDesign:TransitionAssist.DisableTransitions="True">
+                                    <TextBox.Text>
+                                        <Binding Path="NewUnit.Fax.AreaCode" UpdateSourceTrigger="PropertyChanged" NotifyOnValidationError="True">
+                                            <Binding.ValidationRules>
+                                                <domain:AreaCodeValidationRule ValidatesOnTargetUpdated="True" />
+                                            </Binding.ValidationRules>
+                                        </Binding>
+                                    </TextBox.Text>
+                                </TextBox>
+                                <TextBlock Text="-" Grid.Column="1" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                <TextBox Grid.Column="2" FontSize="16" MaxLength="8" Style="{StaticResource MaterialDesignFilledTextBox}"
+                                        materialDesign:HintAssist.Hint="Fax號碼" Margin="0 10"
+                                        materialDesign:ValidationAssist.FontSize="12"
+                                        materialDesign:TransitionAssist.DisableTransitions="True">
+                                    <TextBox.Text>
+                                        <Binding Path="NewUnit.Fax.Number" UpdateSourceTrigger="PropertyChanged" NotifyOnValidationError="True">
+                                            <Binding.ValidationRules>
+                                                <domain:NumberValidationRule ValidatesOnTargetUpdated="True" />
+                                            </Binding.ValidationRules>
+                                        </Binding>
+                                    </TextBox.Text>
+                                </TextBox>
+                            </Grid>
+                        </StackPanel>
+                    </Border>
+
+                    <!--#endregion-->
+                    <!--#region 地址欄位-->
+                    <Border BorderBrush="Black" BorderThickness="1" CornerRadius="20" Padding="20" Margin="20">
+                        <StackPanel>
+                            <CheckBox Style="{StaticResource CheckBoxStyle1}"
+                                    x:Name="ToggleAddress" Content="有地址" HorizontalAlignment="Center"
+                                    IsChecked="{Binding NewUnit.HaveAddress}"/>
+                            <Grid Visibility="{Binding Path=IsChecked, ElementName=ToggleAddress, Converter={StaticResource BoolToVis}}"
+                                    IsEnabled="{Binding Path=IsChecked, ElementName=ToggleAddress}">
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="*"/>
+                                    <RowDefinition Height="auto"/>
+                                </Grid.RowDefinitions>
+                                <Grid Grid.Row="0" Margin="10">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="5*"/>
+                                        <ColumnDefinition Width="5*"/>
+                                    </Grid.ColumnDefinitions>
+                                    <ComboBox Grid.Column="0" MinWidth="145" HorizontalAlignment="Center" VerticalAlignment="Center"
+                                            Style="{StaticResource MaterialDesignFilledComboBox}"
+                                            ItemsSource="{Binding Country,UpdateSourceTrigger=PropertyChanged}"
+                                            materialDesign:ValidationAssist.FontSize="12"
+                                            materialDesign:HintAssist.Hint="縣市" >
+                                        <ComboBox.SelectedItem>
+                                            <Binding Path="NewUnit.Location.Country" UpdateSourceTrigger="PropertyChanged" NotifyOnValidationError="True">
+                                                <Binding.ValidationRules>
+                                                    <domain:AddressComboPickValidationRule ValidatesOnTargetUpdated="True" />
+                                                </Binding.ValidationRules>
+                                            </Binding>
+                                        </ComboBox.SelectedItem>
+                                    </ComboBox>
+                                    <ComboBox Grid.Column="1" MinWidth="145" HorizontalAlignment="Center" VerticalAlignment="Center"
+                                            Style="{StaticResource MaterialDesignFilledComboBox}"
+                                            ItemsSource="{Binding City,UpdateSourceTrigger=PropertyChanged}"
+                                            materialDesign:ValidationAssist.FontSize="12"
+                                            materialDesign:HintAssist.Hint="地區">
+                                        <ComboBox.SelectedItem>
+                                            <Binding Path="NewUnit.Location.City" UpdateSourceTrigger="PropertyChanged" NotifyOnValidationError="True">
+                                                <Binding.ValidationRules>
+                                                    <domain:AddressComboPickValidationRule ValidatesOnTargetUpdated="True" />
+                                                </Binding.ValidationRules>
+                                            </Binding>
+                                        </ComboBox.SelectedItem>
+                                    </ComboBox>
+                                </Grid>
+                                <Grid Grid.Row="1" Margin="10">
+                                    <TextBox FontSize="16" MaxLength="20" MinWidth="300"
+                                            Style="{StaticResource MaterialDesignFilledTextBox}"
+                                            materialDesign:HintAssist.Hint="詳細地址"
+                                            materialDesign:TransitionAssist.DisableTransitions="True" 
+                                            materialDesign:ValidationAssist.FontSize="12">
+                                        <TextBox.Text>
+                                            <Binding Path="NewUnit.Location.Address" UpdateSourceTrigger="PropertyChanged" NotifyOnValidationError="True">
+                                                <Binding.ValidationRules>
+                                                    <domain:NotEmptyValidationRule ValidatesOnTargetUpdated="True" />
+                                                </Binding.ValidationRules>
+                                            </Binding>
+                                        </TextBox.Text>
+                                    </TextBox>
+                                </Grid>
+                            </Grid>
+
+                        </StackPanel>
+                    </Border>
+                    <!--#endregion-->
+                </StackPanel>
+                <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" Margin="10">
+                    <Button x:Name="Create" Content="新增" Margin="10" Width="75"
+                                Click="Create_Click" Style="{StaticResource MaterialDesignOutlinedButton}"
+                                IsEnabled="{Binding Allow,UpdateSourceTrigger=PropertyChanged}" />
+                    <Button Content="取消" Width="75" Margin="10"
+                                Style="{StaticResource MaterialDesignOutlinedButton}"
+                                Command="{ x:Static materialDesign:DialogHost.CloseDialogCommand}" />
+                </StackPanel>
+            </StackPanel>
+        </DataTemplate>
+
+        <DataTemplate DataType="{x:Type model:DeleteInfoNotificationMessage}">
+            <StackPanel MinWidth="300" Margin="20">
+                <TextBlock Text="{Binding Title}" Style="{StaticResource MaterialDesignSubtitle1TextBlock}" />
+                <TextBlock Text="{Binding Message}" Margin="0,10,0,20" Style="{StaticResource MaterialDesignSubtitle1TextBlock}"/>
+                <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
+                    <Button x:Name="Delete" Width="75" Content="確認" Click="Delete_Click"  Margin="0,0,10,0"
+                                Style="{StaticResource MaterialDesignOutlinedButton}"
+                                Command="{ x:Static materialDesign:DialogHost.CloseDialogCommand}" />
+                    <Button Width="75" Content="取消"
+                                Style="{StaticResource MaterialDesignOutlinedButton}"
+                                Command="{ x:Static materialDesign:DialogHost.CloseDialogCommand}" />
+                </StackPanel>
+            </StackPanel>
+        </DataTemplate>
+
+        <DataTemplate DataType="{x:Type model:SearchNotificationMessage}">
+            <StackPanel Margin="20" MinWidth="500">
+                <TextBlock Text="{Binding Title}" Style="{StaticResource MaterialDesignSubtitle1TextBlock}" />
+                <TextBlock Text="{Binding Message}" Margin="0,10,0,20" Style="{StaticResource MaterialDesignSubtitle1TextBlock}"/>
+                <StackPanel>
+                    <!--#region 名稱欄位-->
+                    <TextBox
+                            Margin="10"
+                            Style="{StaticResource MaterialDesignFilledTextBox}"
+                            FontSize="16" MaxLength="20" MinWidth="300"
+                            materialDesign:HintAssist.Hint="名稱"
+                            materialDesign:TransitionAssist.DisableTransitions="True" 
+                            materialDesign:ValidationAssist.FontSize="12"
+                            Text="{Binding Search.Name,UpdateSourceTrigger=PropertyChanged}" />
+                    <!--#endregion-->
+                    <!--#region Cel欄位-->
+                    <TextBox
+                            Margin="10"
+                            Style="{StaticResource MaterialDesignFilledTextBox}"
+                            FontSize="16" MaxLength="10" MinWidth="300"
+                            materialDesign:HintAssist.Hint="Cel"
+                            materialDesign:TransitionAssist.DisableTransitions="True"
+                            materialDesign:ValidationAssist.FontSize="12"
+                            Text="{Binding Search.Cel,UpdateSourceTrigger=PropertyChanged}" />
+                    <!--#endregion-->
+                    <!--#region 統編欄位-->
+                    <Border BorderBrush="Black" BorderThickness="1" CornerRadius="20" Padding="20" Margin="0,15,0,0">
+                        <StackPanel>
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="5*"/>
+                                    <ColumnDefinition Width="5*"/>
+                                </Grid.ColumnDefinitions>
+                                <CheckBox Style="{StaticResource CheckBoxStyle1}"
+                                        x:Name="ToggleSearchTax" Grid.Column="0" Content="有統編" HorizontalAlignment="Center"
+                                        IsChecked="{Binding Search.HaveTax,UpdateSourceTrigger=PropertyChanged}" />
+                                <CheckBox Style="{StaticResource CheckBoxStyle1}"
+                                        Grid.Column="1" Content="沒有統編" HorizontalAlignment="Center"
+                                        IsChecked="{Binding Search.Notax,UpdateSourceTrigger=PropertyChanged}" />
+                            </Grid>
+                            <TextBox
+                                    FontSize="16" MaxLength="8" MinWidth="300"
+                                    Style="{StaticResource MaterialDesignFilledTextBox}"
+                                    materialDesign:HintAssist.Hint="統編"
+                                    materialDesign:TransitionAssist.DisableTransitions="True" 
+                                    materialDesign:ValidationAssist.FontSize="12"
+                                    Visibility="{Binding Path=IsChecked, ElementName=ToggleSearchTax, Converter={StaticResource BoolToVis}}"
+                                    IsEnabled="{Binding Path=IsChecked, ElementName=ToggleSearchTax}"
+                                    Text="{Binding Search.Tax,UpdateSourceTrigger=PropertyChanged}" />
+                        </StackPanel>
+                    </Border>
+                    <!--#endregion-->
+                    <!--#region Tel欄位-->
+                    <Border BorderBrush="Black" BorderThickness="1" CornerRadius="20" Padding="20" Margin="0,15,0,0">
+                        <StackPanel>
+
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="5*"/>
+                                    <ColumnDefinition Width="5*"/>
+                                </Grid.ColumnDefinitions>
+                                <CheckBox Style="{StaticResource CheckBoxStyle1}"
+                                        x:Name="ToggleSearchTel" HorizontalAlignment="Center" Content="有Tel"
+                                        IsChecked="{Binding Search.HaveTel,UpdateSourceTrigger=PropertyChanged}" />
+                                <CheckBox Style="{StaticResource CheckBoxStyle1}"
+                                        Grid.Column="1" Content="沒有Tel" HorizontalAlignment="Center"
+                                        IsChecked="{Binding Search.Notel,UpdateSourceTrigger=PropertyChanged}" />
+                            </Grid>
+                            <Grid IsEnabled="{Binding Path=IsChecked,ElementName=ToggleSearchTel}" 
+                                    Visibility="{Binding Path=IsChecked, ElementName=ToggleSearchTel, Converter={StaticResource BoolToVis}}">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="2*"/>
+                                    <ColumnDefinition Width="1*"/>
+                                    <ColumnDefinition Width="7*"/>
+                                </Grid.ColumnDefinitions>
+                                <TextBox Grid.Column="0"
+                                        FontSize="16" MaxLength="4"
+                                        Style="{StaticResource MaterialDesignFilledTextBox}"
+                                        materialDesign:HintAssist.Hint="Tel區碼"
+                                        materialDesign:ValidationAssist.FontSize="12"
+                                        materialDesign:TransitionAssist.DisableTransitions="True" 
+                                        Text="{Binding Search.Tel.AreaCode,UpdateSourceTrigger=PropertyChanged}" />
+                                <TextBlock Text="-" Grid.Column="1" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                <TextBox Grid.Column="2"
+                                        FontSize="16" MaxLength="8"
+                                        Style="{StaticResource MaterialDesignFilledTextBox}"
+                                        materialDesign:HintAssist.Hint="Tel號碼"
+                                        materialDesign:ValidationAssist.FontSize="12"
+                                        materialDesign:TransitionAssist.DisableTransitions="True"
+                                        Text="{Binding Search.Tel.Number,UpdateSourceTrigger=PropertyChanged}" />
+                            </Grid>
+                        </StackPanel>
+                    </Border>
+                    <!--#endregion-->
+                    <!--#region Fax欄位-->
+                    <Border BorderBrush="Black" BorderThickness="1" CornerRadius="20" Padding="20" Margin="0,15,0,0">
+                        <StackPanel>
+
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="5*"/>
+                                    <ColumnDefinition Width="5*"/>
+                                </Grid.ColumnDefinitions>
+                                <CheckBox Style="{StaticResource CheckBoxStyle1}"
+                                        x:Name="ToggleSearchFax" HorizontalAlignment="Center" Content="有Fax"
+                                        IsChecked="{Binding Search.HaveFax,UpdateSourceTrigger=PropertyChanged}"/>
+                                <CheckBox Style="{StaticResource CheckBoxStyle1}"
+                                        Grid.Column="1" Content="沒有Fax" HorizontalAlignment="Center"
+                                        IsChecked="{Binding Search.Nofax,UpdateSourceTrigger=PropertyChanged}" />
+                            </Grid>
+                            <Grid IsEnabled="{Binding Path=IsChecked, ElementName=ToggleSearchFax}"
+                                    Visibility="{Binding Path=IsChecked, ElementName=ToggleSearchFax, Converter={StaticResource BoolToVis}}">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="2*"/>
+                                    <ColumnDefinition Width="1*"/>
+                                    <ColumnDefinition Width="7*"/>
+                                </Grid.ColumnDefinitions>
+                                <TextBox Grid.Column="0"
+                                        FontSize="16" MaxLength="4"
+                                        Style="{StaticResource MaterialDesignFilledTextBox}"
+                                        materialDesign:HintAssist.Hint="Fax區碼"
+                                        materialDesign:ValidationAssist.FontSize="12"
+                                        materialDesign:TransitionAssist.DisableTransitions="True"
+                                        Text="{Binding Search.Fax.AreaCode,UpdateSourceTrigger=PropertyChanged}" />
+                                <TextBlock Text="-" Grid.Column="1" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                <TextBox Grid.Column="2"
+                                        FontSize="16" MaxLength="8"
+                                        Style="{StaticResource MaterialDesignFilledTextBox}"
+                                        materialDesign:HintAssist.Hint="Fax號碼"
+                                        materialDesign:ValidationAssist.FontSize="12"
+                                        materialDesign:TransitionAssist.DisableTransitions="True"
+                                        Text="{Binding Search.Fax.Number,UpdateSourceTrigger=PropertyChanged}" />
+                            </Grid>
+                        </StackPanel>
+                    </Border>
+                    <!--#endregion-->
+                    <!--#region 地址欄位-->
+                    <Border BorderBrush="Black" BorderThickness="1" CornerRadius="20" Padding="20" Margin="0,15,0,0">
+                        <StackPanel>
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="5*"/>
+                                    <ColumnDefinition Width="5*"/>
+                                </Grid.ColumnDefinitions>
+                                <CheckBox Style="{StaticResource CheckBoxStyle1}"
+                                        x:Name="ToggleSearchAddress" HorizontalAlignment="Center" Margin="0,0,0,10"
+                                        Content="有地址" IsChecked="{Binding Search.HaveAddress,UpdateSourceTrigger=PropertyChanged}" />
+                                <CheckBox Style="{StaticResource CheckBoxStyle1}"
+                                        Grid.Column="1" Content="沒有地址" HorizontalAlignment="Center"
+                                        IsChecked="{Binding Search.Noaddress,UpdateSourceTrigger=PropertyChanged}" />
+                            </Grid>
+
+                            <Grid Visibility="{Binding Path=IsChecked, ElementName=ToggleSearchAddress, Converter={StaticResource BoolToVis}}" 
+                                      IsEnabled="{Binding Path=IsChecked, ElementName=ToggleSearchAddress}">
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="*"/>
+                                    <RowDefinition Height="auto"/>
+                                </Grid.RowDefinitions>
+                                <Grid Grid.Row="0">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="5*"/>
+                                        <ColumnDefinition Width="5*"/>
+                                    </Grid.ColumnDefinitions>
+                                    <ComboBox
+                                            Grid.Column="0" MinWidth="145"
+                                            HorizontalAlignment="Center" VerticalAlignment="Center"
+                                            Style="{StaticResource MaterialDesignFilledComboBox}"
+                                            ItemsSource="{Binding Country,UpdateSourceTrigger=PropertyChanged}"
+                                            materialDesign:ValidationAssist.FontSize="12"
+                                            materialDesign:HintAssist.Hint="縣市"
+                                            SelectedItem="{Binding Search.Location.Country,UpdateSourceTrigger=PropertyChanged}" />
+                                    <ComboBox
+                                            Grid.Column="1" MinWidth="145"
+                                            HorizontalAlignment="Center" VerticalAlignment="Center"
+                                            Style="{StaticResource MaterialDesignFilledComboBox}"
+                                            ItemsSource="{Binding City,UpdateSourceTrigger=PropertyChanged}"
+                                            materialDesign:ValidationAssist.FontSize="12"
+                                            materialDesign:HintAssist.Hint="地區"
+                                            SelectedItem="{Binding Search.Location.City,UpdateSourceTrigger=PropertyChanged}" />
+                                </Grid>
+                                <Grid Grid.Row="1" Margin="0,25,0,0">
+                                    <TextBox
+                                            FontSize="16" MaxLength="20" MinWidth="300"
+                                            Style="{StaticResource MaterialDesignFilledTextBox}"
+                                            materialDesign:HintAssist.Hint="詳細地址"
+                                            materialDesign:TransitionAssist.DisableTransitions="True" 
+                                            materialDesign:ValidationAssist.FontSize="12"
+                                            Text="{Binding Search.Location.Address,UpdateSourceTrigger=PropertyChanged}" />
+                                </Grid>
+                            </Grid>
+                        </StackPanel>
+                    </Border>
+                    <!--#endregion-->
+                </StackPanel>
+                <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" Margin="20">
+                    <Button x:Name="ClearSearch" Margin="0,0,10,0" Width="auto" Content="一鍵清除篩選條件"
+                                Style="{StaticResource MaterialDesignOutlinedButton}"
+                                IsEnabled="{Binding State, UpdateSourceTrigger=PropertyChanged}"
+                                Click="ClearSearch_Click"/>
+                    <Button Content="關閉" Width="auto"
+                                Style="{StaticResource MaterialDesignOutlinedButton}"
+                                Command="{ x:Static materialDesign:DialogHost.CloseDialogCommand}"  />
+                </StackPanel>
+            </StackPanel>
+        </DataTemplate>
+
+        <DataTemplate DataType="{x:Type model:EditNotificationMessage}">
+            <StackPanel Margin="20" MinWidth="500">
+                <TextBlock Text="{Binding Title}" Style="{StaticResource MaterialDesignSubtitle1TextBlock}" />
+                <TextBlock Text="{Binding Message}" Margin="10" Style="{StaticResource MaterialDesignSubtitle1TextBlock}" />
+                <StackPanel>
+                    <!--#region 名稱欄位-->
+                    <TextBox Margin="20" FontSize="16" MaxLength="20" MinWidth="300"
+                            Style="{StaticResource MaterialDesignFilledTextBox}"
+                            materialDesign:HintAssist.Hint="名稱"
+                            materialDesign:TransitionAssist.DisableTransitions="True" 
+                            materialDesign:ValidationAssist.FontSize="12">
+                        <TextBox.Text>
+                            <Binding Path="Edit.Name" UpdateSourceTrigger="PropertyChanged" NotifyOnValidationError="True">
+                                <Binding.ValidationRules>
+                                    <domain:NotEmptyValidationRule ValidatesOnTargetUpdated="True" />
+                                </Binding.ValidationRules>
+                            </Binding>
+                        </TextBox.Text>
+                    </TextBox>
+                    <!--#endregion-->
+
+                    <!--#region Cel欄位-->
+                    <TextBox FontSize="16" Margin="20" MaxLength="10" MinWidth="300"
+                            Style="{StaticResource MaterialDesignFilledTextBox}"
+                            materialDesign:HintAssist.Hint="Cel"
+                            materialDesign:TransitionAssist.DisableTransitions="True" 
+                            materialDesign:ValidationAssist.FontSize="12">
+                        <TextBox.Text>
+                            <Binding Path="Edit.Cel" UpdateSourceTrigger="PropertyChanged" NotifyOnValidationError="True">
+                                <Binding.ValidationRules>
+                                    <domain:CelValidationRule ValidatesOnTargetUpdated="True" />
+                                </Binding.ValidationRules>
+                            </Binding>
+                        </TextBox.Text>
+                    </TextBox>
+                    <!--#endregion-->
+
+                    <!--#region 統編欄位-->
+                    <Border BorderBrush="Black" BorderThickness="1" CornerRadius="20" Padding="20" Margin="20">
+                        <StackPanel>
+                            <CheckBox x:Name="ToggleTax" Style="{StaticResource CheckBoxStyle1}"
+                                    Content="有統編" HorizontalAlignment="Center" IsChecked="{Binding Edit.HaveTax,UpdateSourceTrigger=PropertyChanged}"/>
+
+                            <TextBox FontSize="16" MaxLength="8" MinWidth="300" Style="{StaticResource MaterialDesignFilledTextBox}"
+                                    materialDesign:HintAssist.Hint="統編" Margin="0 10"
+                                    materialDesign:TransitionAssist.DisableTransitions="True" 
+                                    materialDesign:ValidationAssist.FontSize="12"
+                                    Visibility="{Binding Path=IsChecked, ElementName=ToggleTax, Converter={StaticResource BoolToVis}}"
+                                    IsEnabled="{Binding Path=IsChecked, ElementName=ToggleTax}">
+                                <TextBox.Text>
+                                    <Binding Path="Edit.Tax" UpdateSourceTrigger="PropertyChanged" NotifyOnValidationError="True">
+                                        <Binding.ValidationRules>
+                                            <domain:TaxValidationRule ValidatesOnTargetUpdated="True" />
+                                        </Binding.ValidationRules>
+                                    </Binding>
+                                </TextBox.Text>
+                            </TextBox>
+                        </StackPanel>
+                    </Border>
+                    <!--#endregion-->
+
+                    <!--#region Tel欄位-->
+                    <Border BorderBrush="Black" BorderThickness="1" CornerRadius="20" Padding="20" Margin="10">
+                        <StackPanel>
+                            <CheckBox Style="{StaticResource CheckBoxStyle1}"
+                                    x:Name="ToggleTel" Content="有Tel" HorizontalAlignment="Center" IsChecked="{Binding Edit.HaveTel,UpdateSourceTrigger=PropertyChanged}"/>
+
+                            <Grid IsEnabled="{Binding ElementName=ToggleTel,Path=IsChecked,UpdateSourceTrigger=PropertyChanged}"
+                                    Visibility="{Binding Path=IsChecked, ElementName=ToggleTel, Converter={StaticResource BoolToVis}}">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="3*"/>
+                                    <ColumnDefinition Width="1*"/>
+                                    <ColumnDefinition Width="6*"/>
+                                </Grid.ColumnDefinitions>
+                                <TextBox Grid.Column="0" FontSize="16" MaxLength="4" Margin="0 10"
+                                        Style="{StaticResource MaterialDesignFilledTextBox}"
+                                        materialDesign:HintAssist.Hint="Tel區碼"
+                                        materialDesign:ValidationAssist.FontSize="12"
+                                        materialDesign:TransitionAssist.DisableTransitions="True">
+                                    <TextBox.Text>
+                                        <Binding Path="Edit.Tel.AreaCode" UpdateSourceTrigger="PropertyChanged" NotifyOnValidationError="True">
+                                            <Binding.ValidationRules>
+                                                <domain:AreaCodeValidationRule ValidatesOnTargetUpdated="True" />
+                                            </Binding.ValidationRules>
+                                        </Binding>
+                                    </TextBox.Text>
+                                </TextBox>
+                                <TextBlock Text="-" Grid.Column="1" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                <TextBox Grid.Column="2" FontSize="16" MaxLength="8" Margin="0 10"
+                                        Style="{StaticResource MaterialDesignFilledTextBox}"
+                                        materialDesign:HintAssist.Hint="Tel號碼"
+                                        materialDesign:ValidationAssist.FontSize="12"
+                                        materialDesign:TransitionAssist.DisableTransitions="True">
+                                    <TextBox.Text>
+                                        <Binding Path="Edit.Tel.Number" UpdateSourceTrigger="PropertyChanged" NotifyOnValidationError="True">
+                                            <Binding.ValidationRules>
+                                                <domain:NumberValidationRule ValidatesOnTargetUpdated="True" />
+                                            </Binding.ValidationRules>
+                                        </Binding>
+                                    </TextBox.Text>
+                                </TextBox>
+                            </Grid>
+                        </StackPanel>
+                    </Border>
+                    <!--#endregion-->
+
+                    <!--#region Fax欄位-->
+                    <Border BorderBrush="Black" BorderThickness="1" CornerRadius="20" Padding="20" Margin="10">
+                        <StackPanel>
+                            <CheckBox Style="{StaticResource CheckBoxStyle1}"
+                                    x:Name="ToggleFax" HorizontalAlignment="Center" Content="有Fax" IsChecked="{Binding Edit.HaveFax,UpdateSourceTrigger=PropertyChanged}"/>
+
+                            <Grid IsEnabled="{Binding ElementName=ToggleFax,Path=IsChecked,UpdateSourceTrigger=PropertyChanged}"
+                                    Visibility="{Binding Path=IsChecked, ElementName=ToggleFax, Converter={StaticResource BoolToVis}}">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="3*"/>
+                                    <ColumnDefinition Width="1*"/>
+                                    <ColumnDefinition Width="6*"/>
+                                </Grid.ColumnDefinitions>
+                                <TextBox Grid.Column="0" FontSize="16" MaxLength="4" Style="{StaticResource MaterialDesignFilledTextBox}"
+                                        materialDesign:HintAssist.Hint="Fax區碼" Margin="0 10"
+                                        materialDesign:ValidationAssist.FontSize="12"
+                                        materialDesign:TransitionAssist.DisableTransitions="True">
+                                    <TextBox.Text>
+                                        <Binding Path="Edit.Fax.AreaCode" UpdateSourceTrigger="PropertyChanged" NotifyOnValidationError="True">
+                                            <Binding.ValidationRules>
+                                                <domain:AreaCodeValidationRule ValidatesOnTargetUpdated="True" />
+                                            </Binding.ValidationRules>
+                                        </Binding>
+                                    </TextBox.Text>
+                                </TextBox>
+                                <TextBlock Text="-" Grid.Column="1" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                <TextBox Grid.Column="2" FontSize="16" MaxLength="8" Style="{StaticResource MaterialDesignFilledTextBox}"
+                                        materialDesign:HintAssist.Hint="Fax號碼" Margin="0 10"
+                                        materialDesign:ValidationAssist.FontSize="12"
+                                        materialDesign:TransitionAssist.DisableTransitions="True">
+                                    <TextBox.Text>
+                                        <Binding Path="Edit.Fax.Number" UpdateSourceTrigger="PropertyChanged" NotifyOnValidationError="True">
+                                            <Binding.ValidationRules>
+                                                <domain:NumberValidationRule ValidatesOnTargetUpdated="True" />
+                                            </Binding.ValidationRules>
+                                        </Binding>
+                                    </TextBox.Text>
+                                </TextBox>
+                            </Grid>
+                        </StackPanel>
+                    </Border>
+
+                    <!--#endregion-->
+
+                    <!--#region 地址欄位-->
+                    <Border BorderBrush="Black" BorderThickness="1" CornerRadius="20" Padding="20" Margin="10">
+                        <StackPanel>
+                            <CheckBox Style="{StaticResource CheckBoxStyle1}"
+                                    x:Name="ToggleAddress" Content="有地址" HorizontalAlignment="Center" IsChecked="{Binding Edit.HaveAddress,UpdateSourceTrigger=PropertyChanged}"/>
+
+                            <Grid Visibility="{Binding Path=IsChecked, ElementName=ToggleAddress, Converter={StaticResource BoolToVis}}"
+                                    IsEnabled="{Binding Path=IsChecked, ElementName=ToggleAddress}">
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="*"/>
+                                    <RowDefinition Height="auto"/>
+                                </Grid.RowDefinitions>
+                                <Grid Grid.Row="0" Margin="10">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="5*"/>
+                                        <ColumnDefinition Width="5*"/>
+                                    </Grid.ColumnDefinitions>
+                                    <ComboBox Grid.Column="0" MinWidth="145" HorizontalAlignment="Center" VerticalAlignment="Center"
+                                            Style="{StaticResource MaterialDesignFilledComboBox}"
+                                            ItemsSource="{Binding Country,UpdateSourceTrigger=PropertyChanged}"
+                                            materialDesign:ValidationAssist.FontSize="12"
+                                            materialDesign:HintAssist.Hint="縣市" >
+                                        <ComboBox.SelectedItem>
+                                            <Binding Path="Edit.Location.Country" UpdateSourceTrigger="PropertyChanged" NotifyOnValidationError="True">
+                                                <Binding.ValidationRules>
+                                                    <domain:AddressComboPickValidationRule ValidatesOnTargetUpdated="True" />
+                                                </Binding.ValidationRules>
+                                            </Binding>
+                                        </ComboBox.SelectedItem>
+                                    </ComboBox>
+                                    <ComboBox Grid.Column="1" MinWidth="145" HorizontalAlignment="Center" VerticalAlignment="Center"
+                                            Style="{StaticResource MaterialDesignFilledComboBox}"
+                                            ItemsSource="{Binding City,UpdateSourceTrigger=PropertyChanged}"
+                                            materialDesign:ValidationAssist.FontSize="12"
+                                            materialDesign:HintAssist.Hint="地區">
+                                        <ComboBox.SelectedItem>
+                                            <Binding Path="Edit.Location.City" UpdateSourceTrigger="PropertyChanged" NotifyOnValidationError="True">
+                                                <Binding.ValidationRules>
+                                                    <domain:AddressComboPickValidationRule ValidatesOnTargetUpdated="True" />
+                                                </Binding.ValidationRules>
+                                            </Binding>
+                                        </ComboBox.SelectedItem>
+                                    </ComboBox>
+                                </Grid>
+                                <Grid Grid.Row="1" Margin="10">
+                                    <TextBox FontSize="16" MaxLength="20" MinWidth="300"
+                                            Style="{StaticResource MaterialDesignFilledTextBox}"
+                                            materialDesign:HintAssist.Hint="詳細地址"
+                                            materialDesign:TransitionAssist.DisableTransitions="True" 
+                                            materialDesign:ValidationAssist.FontSize="12">
+                                        <TextBox.Text>
+                                            <Binding Path="Edit.Location.Address" UpdateSourceTrigger="PropertyChanged" NotifyOnValidationError="True">
+                                                <Binding.ValidationRules>
+                                                    <domain:NotEmptyValidationRule ValidatesOnTargetUpdated="True" />
+                                                </Binding.ValidationRules>
+                                            </Binding>
+                                        </TextBox.Text>
+                                    </TextBox>
+                                </Grid>
+                            </Grid>
+
+                        </StackPanel>
+                    </Border>
+                    <!--#endregion-->
+                </StackPanel>
+                <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" Margin="10">
+                    <Button x:Name="Edit" Content="修改" Margin="10" Width="75"
+                                Click="Edit_Click"  Style="{StaticResource MaterialDesignOutlinedButton}"
+                                IsEnabled="{Binding Allow,UpdateSourceTrigger=PropertyChanged}" />
+                    <Button Content="取消" Width="75" Margin="10"
+                                Style="{StaticResource MaterialDesignOutlinedButton}"
+                                Command="{ x:Static materialDesign:DialogHost.CloseDialogCommand}" />
+                </StackPanel>
+            </StackPanel>
+        </DataTemplate>
+
+        <DataTemplate DataType="{x:Type model:UnitDetailNotificationMessage}">
+            <StackPanel MinWidth="450" Margin="20">
+                <TextBlock Foreground="#362f54" TextAlignment="Center" Margin="15" FontSize="34" FontWeight="SemiBold" Text="{Binding Source.Name,UpdateSourceTrigger=PropertyChanged}"/>
+                <Grid MinWidth="220">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="*" />
+                        <RowDefinition  Height="Auto" />
+                    </Grid.RowDefinitions>
+                    <StackPanel Grid.Row="0">
+                        <Expander HorizontalAlignment="Stretch" Style="{StaticResource MaterialDesignExpander}" Foreground="{StaticResource MaterialDesignBody}">
+                            <Expander.Header>
+                                <TextBlock>
+                                    <TextBlock.Text>
+                                        <MultiBinding StringFormat="{}{0} 筆報價單   |   總金額 : {1}">
+                                            <Binding Path="QuotationRecord.Count" />
+                                            <Binding Path="QuotationDollar" />
+                                        </MultiBinding>
+                                    </TextBlock.Text>
+                                </TextBlock>
+                            </Expander.Header>
+                            <TreeView ItemsSource="{Binding QuotationRecord}" Cursor="Hand" FontSize="16" Margin="10">
+                                <TreeView.Resources>
+                                    <HierarchicalDataTemplate DataType="{x:Type model:UnitEditRecord}" ItemsSource="{Binding Details}">
+                                        <StackPanel Orientation="Horizontal" Margin="3,2">
+                                            <TextBlock x:Name="Actioning" Text="{Binding Action}"/>
+                                        </StackPanel>
+                                    </HierarchicalDataTemplate>
+                                    <DataTemplate DataType="{x:Type model:Detail}">
+                                        <StackPanel Orientation="Horizontal">
+                                            <TextBlock Text="{Binding Property}" Margin="3 2"/>
+                                            <materialDesign:PackIcon Kind="ArrowRightBox" VerticalAlignment="Center" Foreground="IndianRed" Margin="3 2"/>
+                                            <TextBlock Text="{Binding Newvalue}" Margin="3 2"/>
+                                        </StackPanel>
+                                    </DataTemplate>
+                                </TreeView.Resources>
+                            </TreeView>
+                        </Expander>
+                        <Border Style="{StaticResource HorizontalDividerBorder}" />
+                        <Expander HorizontalAlignment="Stretch" Style="{StaticResource MaterialDesignExpander}" Foreground="{StaticResource MaterialDesignBody}">
+                            <Expander.Header>
+                                <TextBlock>
+                                    <TextBlock.Text>
+                                        <MultiBinding StringFormat="{}{0} 筆請款單   |   總金額 : {1}">
+                                            <Binding Path="InvoiceRecord.Count" />
+                                            <Binding Path="InvoiceDollar" />
+                                        </MultiBinding>
+                                    </TextBlock.Text>
+                                </TextBlock>
+                            </Expander.Header>
+                            <TreeView ItemsSource="{Binding InvoiceRecord}" Cursor="Hand" FontSize="16" Margin="10">
+                                <TreeView.Resources>
+                                    <HierarchicalDataTemplate DataType="{x:Type model:UnitEditRecord}" ItemsSource="{Binding Details}">
+                                        <StackPanel Orientation="Horizontal" Margin="3,2">
+                                            <TextBlock x:Name="Actioning" Text="{Binding Action}"/>
+                                        </StackPanel>
+                                    </HierarchicalDataTemplate>
+                                    <DataTemplate DataType="{x:Type model:Detail}">
+                                        <StackPanel Orientation="Horizontal">
+                                            <TextBlock Text="{Binding Property}" Margin="3 2"/>
+                                            <materialDesign:PackIcon Kind="ArrowRightBox" VerticalAlignment="Center" Foreground="IndianRed" Margin="3 2"/>
+                                            <TextBlock Text="{Binding Newvalue}" Margin="3 2"/>
+                                        </StackPanel>
+                                    </DataTemplate>
+                                </TreeView.Resources>
+                            </TreeView>
+                        </Expander>
+                        <Border Style="{StaticResource HorizontalDividerBorder}" />
+                        <Expander HorizontalAlignment="Stretch" Header="編輯紀錄" Style="{StaticResource MaterialDesignExpander}" Foreground="{StaticResource MaterialDesignBody}">
+                            <TreeView ItemsSource="{Binding EditRecord}" Cursor="Hand" FontSize="16" Margin="10">
+                                <TreeView.Resources>
+                                    <HierarchicalDataTemplate DataType="{x:Type model:UnitEditRecord}" ItemsSource="{Binding Details}">
+                                        <HierarchicalDataTemplate.Triggers>
+                                            <DataTrigger Binding="{Binding Action}" Value="編輯單位">
+                                                <DataTrigger.Setters>
+                                                    <Setter TargetName="Actioning" Property="TextBlock.Foreground" Value="PaleVioletRed" />
+                                                </DataTrigger.Setters>
+                                            </DataTrigger>
+                                        </HierarchicalDataTemplate.Triggers>
+                                        <StackPanel Orientation="Horizontal" Margin="3,2">
+                                            <TextBlock Text="{Binding User,UpdateSourceTrigger=PropertyChanged}" Foreground="RoyalBlue"/>
+                                            <TextBlock Text=" 於 " />
+                                            <TextBlock Text="{Binding ActionTime}" Foreground="Black"/>
+                                            <TextBlock x:Name="Actioning" Text="{Binding Action,StringFormat={} {0}}" Foreground="DarkViolet"/>
+                                        </StackPanel>
+                                    </HierarchicalDataTemplate>
+                                    <DataTemplate DataType="{x:Type model:Detail}">
+                                        <DataTemplate.Triggers>
+                                            <DataTrigger Binding="{Binding Oldvalue}" Value="新增">
+                                                <DataTrigger.Setters>
+                                                    <Setter TargetName="oldvalue" Property="TextBlock.Foreground" Value="Green"></Setter>
+                                                    <Setter TargetName="oldvalue" Property="TextBlock.TextDecorations" Value="None"></Setter>
+                                                </DataTrigger.Setters>
+                                            </DataTrigger>
+                                        </DataTemplate.Triggers>
+
+                                        <StackPanel Orientation="Horizontal">
+                                            <TextBlock Text="{Binding Property}" Margin="3 2"/>
+                                            <materialDesign:PackIcon Kind="Equal" VerticalAlignment="Center" Margin="3 2"/>
+                                            <TextBlock x:Name="oldvalue" Text="{Binding Oldvalue}" Margin="3 2" TextDecorations="Strikethrough" Foreground="Red"/>
+                                            <materialDesign:PackIcon Kind="ArrowRightBox" VerticalAlignment="Center" Foreground="IndianRed" Margin="3 2"/>
+                                            <TextBlock Text="{Binding Newvalue}" Margin="3 2"/>
+                                        </StackPanel>
+                                    </DataTemplate>
+                                </TreeView.Resources>
+                            </TreeView>
+                        </Expander>
+                        <Border Style="{StaticResource HorizontalDividerBorder}" />
+                    </StackPanel>
+
+                </Grid>
+                <Button Content="關閉" Width="75" Margin="10" HorizontalAlignment="Center"
+                    Style="{StaticResource MaterialDesignOutlinedButton}"
+                    Command="{ x:Static materialDesign:DialogHost.CloseDialogCommand}" />
+            </StackPanel>
+        </DataTemplate>
+    </UserControl.Resources>
+    <materialDesign:DialogHost DialogMargin="8" Identifier="MainDialog" Style="{StaticResource MaterialDesignEmbeddedDialogHost}" >
+        <StackPanel>
+            <DockPanel>
+                <TextBlock DockPanel.Dock="Left" Text="自單位" FontSize="32" Margin="20 0" FontWeight="SemiBold" Foreground="#121518" VerticalAlignment="Center"/>
+                <Button x:Name="OpenCreateDialog" Style="{StaticResource gridCreateButton}" HorizontalAlignment="Right" DockPanel.Dock="Right" VerticalAlignment="Center" Click="OpenCreateDialog_Click">
+                    <StackPanel Orientation="Horizontal">
+                        <fa:ImageAwesome Icon="Plus" VerticalAlignment="Center" Margin="0 1 8 0" Width="11" Height="11"/>
+                        <TextBlock Text="新增單位"/>
+                    </StackPanel>
+                </Button>
+                <Button x:Name="SearchButton" Style="{StaticResource gridSearchButton}" HorizontalAlignment="Right" DockPanel.Dock="Right" VerticalAlignment="Center" Click="SearchButton_Click">
+                    <StackPanel Orientation="Horizontal">
+                        <fa:ImageAwesome Icon="Search" VerticalAlignment="Center" Margin="0 1 8 0" Width="11" Height="11"/>
+                        <TextBlock Text="搜尋單位"/>
+                    </StackPanel>
+                </Button>
+            </DockPanel>
+            <!--Tab buttons-->
+            <StackPanel Orientation="Horizontal" Margin="20 10">
+                <Button x:Name="AllButton" Style="{StaticResource tabButton}" Content="全部" BorderBrush="#784FF2"/>
+                <!--<Button x:Name="SelectedButton" Style="{StaticResource tabButton}" Content="已選擇"/>
+                <Button x:Name="UnSelectButton" Style="{StaticResource tabButton}" Content="未選擇"/>-->
+            </StackPanel>
+            <Border Style="{StaticResource HorizontalDividerBorder}" Margin="15 0"/>
+            <DockPanel Margin="20">
+                <TextBlock DockPanel.Dock="Left" HorizontalAlignment="Left" FontSize="18" FontWeight="SemiBold" Foreground="#121518" VerticalAlignment="Center">
+                    <TextBlock.Text>
+                        <MultiBinding StringFormat="{}{0} 筆單位">
+                            <Binding Path="TotalCount" />
+                        </MultiBinding>
+                    </TextBlock.Text>
+                </TextBlock>
+                <TextBlock DockPanel.Dock="Right" Margin="20 0" HorizontalAlignment="Right" FontSize="13" FontWeight="SemiBold" Foreground="#121518" VerticalAlignment="Center">
+                    <TextBlock.Text>
+                        <MultiBinding StringFormat="{}第 {0} 頁 / 第 {1} 頁">
+                            <Binding Path="CurrentPage" />
+                            <Binding Path="TotalPage" />
+                        </MultiBinding>
+                    </TextBlock.Text>
+                </TextBlock>
+                <TextBlock DockPanel.Dock="Right" Margin="20 0" HorizontalAlignment="Right" FontSize="13" FontWeight="SemiBold" Foreground="#121518" VerticalAlignment="Center">
+                    <TextBlock.Text>
+                        <MultiBinding StringFormat="{}每頁顯示 {0} 筆">
+                            <Binding Path="PerPageDisplayOfCount" />
+                        </MultiBinding>
+                    </TextBlock.Text>
+                </TextBlock>
+            </DockPanel>
+            <Border Style="{StaticResource HorizontalDividerBorder}" Margin="15 0"/>
+            <DataGrid ItemsSource="{Binding currentPageList,UpdateSourceTrigger=PropertyChanged}" RowStyle="{StaticResource DataGridRowStyle1}" ColumnHeaderStyle="{StaticResource DataGridColumnHeaderStyle1}" CellStyle="{StaticResource DataGridCellStyle1}" x:Name="membersDataGrid" Style="{StaticResource DataGridStyle1}">
+                <DataGrid.Columns>
+                    <DataGridTextColumn Header="名稱" IsReadOnly="True" CanUserResize="True" Width="auto" Binding="{Binding Name}" MinWidth="270"/>
+                    <DataGridTextColumn Header="聯絡號碼" IsReadOnly="True" CanUserResize="True" Width="*" Binding="{Binding Cel}" MinWidth="200"/>
+                    <DataGridTextColumn Header="統編" IsReadOnly="True" CanUserResize="True" Width="*" Binding="{Binding DisplayTax}" MinWidth="200"/>
+                    <DataGridTextColumn Header="電話號碼" IsReadOnly="True" CanUserResize="True" Width="*" MinWidth="200" Binding="{Binding Tel.DisplayContact}"/>
+                    <DataGridTextColumn Header="傳真號碼" IsReadOnly="True" CanUserResize="True" Width="*" MinWidth="200" Binding="{Binding Fax.DisplayContact}"/>
+                    <DataGridTextColumn Header="地址" IsReadOnly="True" Width="*" CanUserResize="True" MinWidth="350" Binding="{Binding Location.DisplayAddress}"/>
+
+                    <DataGridTemplateColumn Header="操作" IsReadOnly="True" Width="auto" MinWidth="200">
+                        <DataGridTemplateColumn.CellTemplate>
+                            <DataTemplate>
+                                <StackPanel Orientation="Horizontal">
+                                    <Button Style="{StaticResource gridEditButton}" ToolTip="編輯單位" x:Name="EditButton" Click="EditButton_Click">
+                                        <fa:ImageAwesome Icon="PencilSquareOutline" Style="{StaticResource gridButtonIcon}"/>
+                                    </Button>
+                                    <Button x:Name="DeleteButton" Margin="5 0 0 0" Style="{StaticResource gridRemoveButton}" ToolTip="刪除單位" Click="DeleteButton_Click">
+                                        <fa:ImageAwesome Icon="TrashOutline" Style="{StaticResource gridButtonIcon}"/>
+                                    </Button>
+                                    <Button x:Name="InfoButton" Margin="5 0 0 0" Style="{StaticResource gridInfoButton}" ToolTip="查看單位" Click="InfoButton_Click">
+                                        <fa:ImageAwesome Icon="Info" Style="{StaticResource gridButtonIcon}"/>
+                                    </Button>
+                                </StackPanel>
+                            </DataTemplate>
+                        </DataGridTemplateColumn.CellTemplate>
+                    </DataGridTemplateColumn>
+                </DataGrid.Columns>
+            </DataGrid>
+            <!--Pagingation Section-->
+            <Border HorizontalAlignment="Right" BorderBrush="#DEE4EC" BorderThickness="1" CornerRadius="5" Padding="5" Background="#ffffff" Margin="50 20">
+                <StackPanel Orientation="Horizontal">
+                    <Button Style="{StaticResource prevPageButton}" x:Name="PrevButton" Click="PrevButton_Click" ToolTip="上一頁">
+                        <fa:ImageAwesome Icon="ArrowCircleLeft" Style="{StaticResource pagingButtonIcon}"/>
+                    </Button>
+                    <Rectangle Width="1" Fill="#DEE4EC" Margin="3 7"/>
+                    <Rectangle Width="1" Fill="#DEE4EC" Margin="3 7"/>
+                    <Button Style="{StaticResource pagingButton}" x:Name="NextButton" Click="NextButton_Click" ToolTip="下一頁">
+                        <fa:ImageAwesome Icon="ArrowCircleRight" Style="{StaticResource pagingButtonIcon}"/>
+                    </Button>
+                </StackPanel>
+            </Border>
+        </StackPanel>
+    </materialDesign:DialogHost>
+</UserControl>

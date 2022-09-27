@@ -1,0 +1,82 @@
+﻿<Window x:Class="LanProject.SelectUser.CreateUser"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:LanProject.SelectUser"
+        xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+        mc:Ignorable="d" WindowStartupLocation="CenterScreen" Height="850" Width="800"
+        Title="{StaticResource appName}">
+    <Window.Resources>
+        <Style TargetType="CheckBox" BasedOn="{StaticResource CheckBoxStyle1}"/>
+    </Window.Resources>
+    <Border CornerRadius="20" Margin="5">
+        <materialDesign:DialogHost
+                    Identifier="RootDialog2"
+                    DialogTheme="Inherit">
+            <ScrollViewer VerticalScrollBarVisibility="Auto">
+                <StackPanel>
+                    <Label Content="新增用戶" FontSize="25" HorizontalAlignment="center" />
+                    <Separator BorderThickness="5"/>
+                    <Grid HorizontalAlignment="Center" Margin="20">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="auto"/>
+                            <RowDefinition Height="*"/>
+                        </Grid.RowDefinitions>
+                        <TextBlock Grid.Row="0" HorizontalAlignment="Center" VerticalAlignment="Center" Text="名稱" Style="{StaticResource MaterialDesignHeadline5TextBlock}"/>
+                        <TextBox Grid.Row="1" HorizontalAlignment="Center" VerticalAlignment="Center" Style="{StaticResource MaterialDesignFilledTextBox}"
+                                materialDesign:HintAssist.Foreground="{DynamicResource AccentFillColorDefaultBrush}"
+                                BorderBrush="{DynamicResource AccentFillColorDefaultBrush}"
+                                materialDesign:HintAssist.Hint="名稱" FontSize="20" Width="500" Text="{Binding NickName,UpdateSourceTrigger=PropertyChanged}"/>
+                    </Grid>
+                    <Grid HorizontalAlignment="Center" Margin="20">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="*"/>
+                            <RowDefinition Height="auto"/>
+                        </Grid.RowDefinitions>
+                        <Grid Grid.Row="0" HorizontalAlignment="Center">
+                            <CheckBox x:Name="TogglePassword" FontSize="20" VerticalAlignment="Center"
+                                    IsChecked="{Binding EnablePassword,UpdateSourceTrigger=PropertyChanged}" Content="設定驗證碼" />
+                        </Grid>
+                        <Grid Grid.Row="1" Visibility="{Binding ElementName=TogglePassword,Path=IsChecked,Converter={StaticResource BoolToVis}}">
+                            <PasswordBox x:Name="pwd" Width="500" FontSize="20" Style="{StaticResource MaterialDesignFilledPasswordBox}" materialDesign:HintAssist.Hint="驗證碼"
+                                    materialDesign:HintAssist.Foreground="{DynamicResource AccentFillColorDefaultBrush}"
+                                    BorderBrush="{DynamicResource AccentFillColorDefaultBrush}"
+                                    PasswordChanged="PasswordBox_PasswordChanged" />
+                        </Grid>
+                    </Grid>
+                    <Grid HorizontalAlignment="Center" Margin="20">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="*"/>
+                            <RowDefinition Height="auto"/>
+                        </Grid.RowDefinitions>
+                        <Grid Grid.Row="0" HorizontalAlignment="Center">
+                            <CheckBox x:Name="ToggleimagePath" FontSize="20" VerticalAlignment="Center"
+                                    IsChecked="{Binding EnableimagePath,UpdateSourceTrigger=PropertyChanged}" Content="設定登入頭像" />
+                        </Grid>
+                        <StackPanel Grid.Row="1" Visibility="{Binding ElementName=ToggleimagePath,Path=IsChecked,Converter={StaticResource BoolToVis}}">
+                            <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+                                <Label Name="DisplayPathInfo" VerticalAlignment="Center"
+                                        Content="{Binding imagePath,UpdateSourceTrigger=PropertyChanged}" ContentStringFormat=" 選擇檔案路徑 : {0}"/>
+                                <Button Name="BrowseButton" Width="100" VerticalAlignment="Center" Content="路徑" Style="{StaticResource MaterialDesignPaperLightButton}"
+                                        Margin="20" Click="BrowseButton_Click"/>
+                            </StackPanel>
+                            <Border CornerRadius="200" Width="256" Height="256" BorderThickness="1" BorderBrush="Black" Visibility="{Binding DisplayArea,UpdateSourceTrigger=PropertyChanged,Converter={StaticResource BoolToVis}}">
+                                <Border.Background>
+                                    <ImageBrush x:Name="SHOW" Stretch="UniformToFill"/>
+                                </Border.Background>
+                            </Border>
+                        </StackPanel>
+                    </Grid>
+                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+                        <Button Content="新增" Width="150" Height="50" FontSize="24" HorizontalAlignment="Center" VerticalAlignment="Bottom" Margin="20"
+                                IsEnabled="{Binding EnableSubmit,UpdateSourceTrigger=PropertyChanged}" Style="{StaticResource MaterialDesignPaperDarkButton}"
+                                Click="Create_Click"/>
+                        <Button Content="取消" Width="150" Height="50" FontSize="24" HorizontalAlignment="Center" VerticalAlignment="Bottom" Margin="20"
+                                Click="Close_Click" Style="{StaticResource MaterialDesignPaperDarkButton}"/>
+                    </StackPanel>
+                </StackPanel>
+            </ScrollViewer>
+        </materialDesign:DialogHost>
+    </Border>
+</Window>

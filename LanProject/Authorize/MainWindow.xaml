@@ -1,0 +1,63 @@
+﻿<Window x:Class="LanProject.Authorize.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:LanProject.Authorize"
+        xmlns:xctk="http://schemas.xceed.com/wpf/xaml/toolkit"
+        mc:Ignorable="d" WindowStartupLocation="CenterScreen" ContentRendered="WindowRendered" ResizeMode="NoResize"
+        Title="{StaticResource appName}" Height="350" Width="450">
+    <Grid Margin="0 10" HorizontalAlignment="Center">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
+        <Grid Grid.Row="0">
+            <TextBlock Height="auto" HorizontalAlignment="Left" Margin="-30,5,0,0" Name="LoginHeading" Text="請輸入序號" VerticalAlignment="Top" FontSize="20" FontStretch="ExtraCondensed"/>
+            <TextBlock Height="auto" HorizontalAlignment="Left" Margin="-10,40,0,0" Name="textBlockHeading" VerticalAlignment="Top" FontSize="16" FontStyle="Italic">  
+                    此電腦尚未註冊，請輸入序號進行註冊
+                    <LineBreak /><!--line break-->  
+                    <TextBlock Margin="0,10,0,0" Foreground="Red">尚無序號嗎？</TextBlock>
+                    <LineBreak /><!--line break-->  
+                    <!--textblock as a hyperlink-->  
+                    <TextBlock Margin="20,10,0,0">
+                        1. 點
+                        <TextBlock>  
+                             <Hyperlink FontSize="14" FontStyle="Normal" PreviewMouseLeftButtonDown="Hyperlink_PreviewMouseLeftButtonDown">我</Hyperlink>  
+                        </TextBlock>
+                        複製信箱致信取得序號
+                    </TextBlock>
+                    <!--end textblock as a hyperlink--> 
+                    <LineBreak /><!--line break-->  
+                    <!--textblock as a hyperlink-->  
+                    <TextBlock Margin="20,0,0,0">
+                        2. 請致電
+                        <TextBlock>  
+                             <Hyperlink FontSize="14" FontStyle="Normal" >+886 - 912345678</Hyperlink>  
+                        </TextBlock>
+                        取得序號
+                    </TextBlock>
+                    <!--end textblock as a hyperlink--> 
+                </TextBlock>
+            </Grid>
+            <Grid Grid.Row="1" Margin="0,20,0,0">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="*" />
+                </Grid.RowDefinitions>
+                <Grid Grid.Row="0">
+                    <StackPanel Orientation="Horizontal">
+                        <TextBlock Width="auto" Height="auto" FontSize="16" VerticalAlignment="Center" HorizontalAlignment="Center" Name="productkeyLabel" Text="序號：" />
+                        <!--<wpfui:TextBox Width="300" FontSize="16" Name="productkeyInputbox" OpacityMask="Red"></wpfui:TextBox>-->
+                        <xctk:MaskedTextBox x:Name="productkeyinput" Style="{DynamicResource MaterialDesignFilledTextBox}"
+                             Mask="AAAA - AAAA - AAAA - AAAA - AAAA" Padding="10,5" />
+                    </StackPanel>
+                </Grid>
+                <Grid Grid.Row="1" Margin="0,30,0,0">
+                    <StackPanel>
+                        <Button Content="驗證" Width="auto" Height="auto" FontSize="16" HorizontalAlignment="Center" Name="submit" Click="submit_Click" IsDefault="True" Style="{DynamicResource MaterialDesignPaperDarkButton}"/>
+                    </StackPanel>
+                </Grid>
+            </Grid>
+        </Grid>
+</Window>

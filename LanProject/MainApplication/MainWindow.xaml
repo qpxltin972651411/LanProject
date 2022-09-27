@@ -1,0 +1,144 @@
+﻿<Window x:Class="LanProject.MainApplication.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:LanProject.MainApplication"
+        xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+        xmlns:fa="http://schemas.fontawesome.io/icons/"
+        xmlns:ctrl="clr-namespace:LanProject.MainApplication.Control"
+        mc:Ignorable="d" WindowStartupLocation="CenterScreen" WindowState="Maximized"
+        Title="{StaticResource appName}" MinHeight="750" MinWidth="800">
+    <Window.Resources>
+        <Style x:Key="SnackbarActionButton" TargetType="{x:Type Button}" BasedOn="{StaticResource MaterialDesignSnackbarActionButton}">
+            <Setter Property="Foreground" Value="Red"/>
+        </Style>
+    </Window.Resources>
+    <materialDesign:DialogHost Identifier="RootDialog" DialogTheme="Inherit" 
+        SnackbarMessageQueue="{Binding ElementName=MainSnackbar, Path=MessageQueue}">
+        <Grid>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="250" />
+                <ColumnDefinition Width="*" />
+            </Grid.ColumnDefinitions>
+            <!--Main Menu-->
+            <StackPanel Background="#F3F3F3" Grid.Column="0">
+                <Image Source="pack://application:,,,/Resources/logo.png" Width="200" Margin="25"/>
+                <ctrl:Profile x:Name="pfile" Size="100" PaddingNum="5" MouseLeftButtonDown="pfile_MouseLeftButtonDown" />
+
+                <TextBlock Text="{Binding CurrentUser.Nickname,UpdateSourceTrigger=PropertyChanged}" TextAlignment="Center" FontSize="20" FontWeight="SemiBold" Margin="0 10 0 5"/>
+                <TextBlock Text="{Binding CurrentUser.Email,UpdateSourceTrigger=PropertyChanged}" TextAlignment="Center" FontSize="14" Foreground="#9a9a9a"/>
+                <ListBox x:Name="DemoItemsListBox" 
+                        Margin="0,16"
+                        SelectedIndex = "{Binding SelectedIndex}"
+                        SelectedItem = "{Binding SelectedItem, UpdateSourceTrigger=PropertyChanged}"
+                        ItemsSource="{Binding DataList}"
+                        SelectionChanged="DemoItemsListBox_SelectionChanged"
+                        AutomationProperties.Name="DemoPagesListBox"
+                        Style="{StaticResource MaterialDesignNavigationPrimaryListBox}">
+                    <ListBox.Resources>
+                        <Style x:Key="ScrollThumbs" TargetType="{x:Type Thumb}">
+                            <Setter Property="Template">
+                                <Setter.Value>
+                                    <ControlTemplate TargetType="{x:Type Thumb}">
+                                        <Grid x:Name="Grid">
+                                            <Rectangle HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Width="Auto" Height="Auto" Fill="Transparent" />
+                                            <Border x:Name="ScrollBarRectangle" CornerRadius="5" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Width="Auto" Height="Auto"  Background="{TemplateBinding Background}" />
+                                        </Grid>
+                                        <ControlTemplate.Triggers>
+                                            <Trigger Property="Tag" Value="Horizontal">
+                                                <Setter TargetName="ScrollBarRectangle" Property="Width" Value="Auto" />
+                                                <Setter TargetName="ScrollBarRectangle" Property="Height" Value="7" />
+                                            </Trigger>
+                                        </ControlTemplate.Triggers>
+                                    </ControlTemplate>
+                                </Setter.Value>
+                            </Setter>
+                        </Style>
+                        <Style TargetType="{x:Type ScrollBar}">
+                            <Setter Property="Margin" Value="-5,0,0,0" />
+                            <Setter Property="Stylus.IsFlicksEnabled" Value="false" />
+                            <Setter Property="Foreground" Value="#FF8C8C8C" />
+                            <Setter Property="Background" Value="Transparent" />
+                            <Setter Property="Width" Value="8" />
+                            <Setter Property="Template">
+                                <Setter.Value>
+                                    <ControlTemplate TargetType="{x:Type ScrollBar}">
+                                        <Grid x:Name="GridRoot" Width="8" Background="{TemplateBinding Background}">
+                                            <Track x:Name="PART_Track" IsDirectionReversed="true" Focusable="false">
+                                                <Track.Thumb>
+                                                    <Thumb x:Name="ScrollBarThumb" Background="{TemplateBinding Foreground}" Style="{StaticResource ScrollThumbs}" />
+                                                </Track.Thumb>
+                                                <Track.IncreaseRepeatButton>
+                                                    <RepeatButton x:Name="PageUp" Command="ScrollBar.PageDownCommand" Opacity="0" Focusable="false" />
+                                                </Track.IncreaseRepeatButton>
+                                                <Track.DecreaseRepeatButton>
+                                                    <RepeatButton x:Name="PageDown" Command="ScrollBar.PageUpCommand" Opacity="0" Focusable="false" />
+                                                </Track.DecreaseRepeatButton>
+                                            </Track>
+                                        </Grid>
+
+                                        <ControlTemplate.Triggers>
+                                            <Trigger Property="IsEnabled" Value="false">
+                                                <Setter TargetName="ScrollBarThumb" Property="Visibility" Value="Collapsed" />
+                                            </Trigger>
+                                            <Trigger Property="Orientation" Value="Horizontal">
+                                                <Setter TargetName="GridRoot" Property="LayoutTransform">
+                                                    <Setter.Value>
+                                                        <RotateTransform Angle="-90" />
+                                                    </Setter.Value>
+                                                </Setter>
+                                                <Setter TargetName="PART_Track" Property="LayoutTransform">
+                                                    <Setter.Value>
+                                                        <RotateTransform Angle="-90" />
+                                                    </Setter.Value>
+                                                </Setter>
+                                                <Setter Property="Width" Value="Auto" />
+                                                <Setter Property="Height" Value="8" />
+                                                <Setter TargetName="ScrollBarThumb" Property="Tag" Value="Horizontal" />
+                                                <Setter TargetName="PageDown" Property="Command" Value="ScrollBar.PageLeftCommand" />
+                                                <Setter TargetName="PageUp" Property="Command" Value="ScrollBar.PageRightCommand" />
+                                            </Trigger>
+                                        </ControlTemplate.Triggers>
+                                    </ControlTemplate>
+                                </Setter.Value>
+                            </Setter>
+                        </Style>
+                    </ListBox.Resources>
+                    <ListBox.ItemTemplate>
+                        <DataTemplate DataType="Page">
+                            <StackPanel Orientation="Horizontal">
+                                <fa:ImageAwesome Icon="{Binding ImgPath}" Width="32" VerticalAlignment="Center" Foreground="{DynamicResource PrimaryHueLightBrush}" Opacity="0.7"/>
+                                <TextBlock Margin="18,0,0,0" Text="{Binding DisplayName}" VerticalAlignment="Center" Style="{DynamicResource MaterialDesignSubtitle1TextBlock}"/>
+                            </StackPanel>
+                        </DataTemplate>
+                    </ListBox.ItemTemplate>
+                </ListBox>
+
+                <Separator Margin="20 15" Background="#cacaca" Opacity="0.9"/>
+
+                <Button x:Name="logout" Style="{StaticResource Signout}" Click="logout_Click">
+                    <StackPanel Orientation="Horizontal">
+                        <TextBlock Text="登出" VerticalAlignment="Center"/>
+                    </StackPanel>
+                </Button>
+
+            </StackPanel>
+            <Grid Grid.Column="1">
+                <ScrollViewer x:Name="MainScrollViewer"
+                    materialDesign:ScrollViewerAssist.IsAutoHideEnabled="True"
+                    HorizontalScrollBarVisibility="{Binding SelectedItem.HorizontalScrollBarVisibilityRequirement, FallbackValue=Disabled}"
+                    VerticalScrollBarVisibility="{Binding SelectedItem.VerticalScrollBarVisibilityRequirement, FallbackValue=Disabled}" >
+                    <ContentControl
+                        DataContextChanged="OnSelectedItemChanged"
+                        DataContext="{Binding SelectedItem}"
+                        Margin="{Binding MarginRequirement, FallbackValue=16}"
+                        Content="{Binding Content, UpdateSourceTrigger=PropertyChanged, FallbackValue={x:Null}}" />
+                </ScrollViewer>
+                <materialDesign:Snackbar x:Name="MainSnackbar" ActionButtonStyle="{StaticResource SnackbarActionButton}"
+                    MessageQueue="{materialDesign:MessageQueue}" />
+
+            </Grid>
+        </Grid>
+    </materialDesign:DialogHost>
+</Window>

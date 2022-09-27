@@ -1,0 +1,48 @@
+﻿<UserControl x:Class="LanProject.MainApplication.View.Setting.Personal"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:LanProject.MainApplication.View.Setting"
+             xmlns:materialDesign ="http://materialdesigninxaml.net/winfx/xaml/themes"
+             mc:Ignorable="d" 
+             d:DesignHeight="450" d:DesignWidth="800">
+    <UserControl.Resources>
+        <Style TargetType="CheckBox" BasedOn="{StaticResource CheckBoxStyle1}"/>
+    </UserControl.Resources>
+    <StackPanel>
+        <StackPanel HorizontalAlignment="Center" Margin="20">
+            <TextBlock Text="修改名稱" HorizontalAlignment="Center" Style="{StaticResource MaterialDesignHeadline4TextBlock}"/>
+            <TextBox Text="{Binding NewNickname,UpdateSourceTrigger=PropertyChanged}" Style="{StaticResource MaterialDesignFilledTextBox}" Width="800" FontSize="20" materialDesign:HintAssist.Hint="{Binding CurrentUser.Nickname}"/>
+        </StackPanel>
+
+        <Grid HorizontalAlignment="Center" Margin="20" Background="{StaticResource AttentionToActionBrush}">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="auto"/>
+                <RowDefinition Height="auto"/>
+            </Grid.RowDefinitions>
+            <TextBlock Grid.Row="0" Text="修改個人通行碼" HorizontalAlignment="Center" Style="{StaticResource MaterialDesignHeadline4TextBlock}"/>
+            <Grid Grid.Row="1" HorizontalAlignment="Center">
+                <StackPanel Orientation="Horizontal">
+                    <RadioButton x:Name="noedit" FontSize="20" VerticalAlignment="Center"  Style="{StaticResource MaterialDesignUserForegroundRadioButton}"
+                                    IsChecked="{Binding NoEdit,UpdateSourceTrigger=PropertyChanged}" Content="不做修改" Margin="10"/>
+                    <RadioButton x:Name="TogglePassword" FontSize="20" VerticalAlignment="Center"  Style="{StaticResource MaterialDesignUserForegroundRadioButton}"
+                                    IsChecked="{Binding EnablePassword,UpdateSourceTrigger=PropertyChanged}" Content="設定驗證碼" Margin="10"/>
+                    <RadioButton x:Name="clearPassword" FontSize="20" VerticalAlignment="Center" Style="{StaticResource MaterialDesignUserForegroundRadioButton}" IsEnabled="{Binding enableclear,UpdateSourceTrigger=PropertyChanged}"
+                                    IsChecked="{Binding ClrPwd,UpdateSourceTrigger=PropertyChanged}" Content="清除驗證碼" Margin="10"/>
+                </StackPanel>
+            </Grid>
+            <StackPanel Grid.Row="2" Visibility="{Binding ElementName=TogglePassword,Path=IsChecked,Converter={StaticResource BoolToVis}}">
+                <PasswordBox x:Name="pwd" Width="500" FontSize="20" Style="{StaticResource MaterialDesignFilledPasswordBox}" materialDesign:HintAssist.Hint="新驗證碼"
+                                    materialDesign:HintAssist.Foreground="{DynamicResource AccentFillColorDefaultBrush}" Margin="10"
+                                    BorderBrush="{DynamicResource AccentFillColorDefaultBrush}" />
+            </StackPanel>
+        </Grid>
+        <StackPanel HorizontalAlignment="Center" Margin="20">
+            <TextBlock Text="修改密碼" HorizontalAlignment="Center" Style="{StaticResource MaterialDesignHeadline4TextBlock}"/>
+            <PasswordBox x:Name="mainpwd" Style="{StaticResource MaterialDesignFilledPasswordBox}" Width="800" FontSize="20"/>
+        </StackPanel>
+        <Button Content="送出" Style="{StaticResource MaterialDesignPaperDarkButton}" Margin="20" Width="150" Click="Button_Click"/>
+    </StackPanel>
+</UserControl>

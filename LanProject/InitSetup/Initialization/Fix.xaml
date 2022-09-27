@@ -1,0 +1,50 @@
+﻿<Window x:Class="LanProject.InitSetup.Initialization.Fix"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:LanProject.InitSetup.Initialization"
+        xmlns:fa="http://schemas.fontawesome.io/icons/"
+        mc:Ignorable="d" WindowStartupLocation="CenterScreen" ResizeMode="NoResize"
+        Title="修復問題" Width="400" Height="400">
+
+        <!-- #region Main content -->
+    <Grid HorizontalAlignment="Center" VerticalAlignment="Center">
+        <StackPanel Orientation="Vertical">
+            <TextBlock Foreground="Red" FontSize="20" HorizontalAlignment="Center">* 找不到資料 嘗試以下方法 *</TextBlock>
+            <Button x:Name="reSet" Width="200" Height="40" Margin="0 10" Click="reSet_Click" Style="{StaticResource MaterialDesignPaperSecondaryButton}">
+                <Button.Content>
+                    <StackPanel Orientation="Horizontal">
+                        <fa:ImageAwesome Icon="RotateLeft" Width="20" VerticalAlignment="Center" Margin="5"/>
+                        <TextBlock Text="重設應用程序" VerticalAlignment="Center"/>
+                    </StackPanel>
+                </Button.Content>
+            </Button>
+            <Button x:Name="reSelectFolderPath" Width="200" Height="40" Margin="0 10" Click="reSelectFolderPath_Click" Style="{StaticResource MaterialDesignPaperSecondaryButton}">
+                <Button.Content>
+                    <StackPanel Orientation="Horizontal">
+                    <fa:ImageAwesome Icon="FolderOpen" VerticalAlignment="Center" Margin="5"/>
+                    <TextBlock Text="重設資料存儲位置" VerticalAlignment="Center"/>
+                </StackPanel>
+                </Button.Content>
+            </Button>
+            <Button x:Name="reTry" Width="200" Height="40" Margin="0 10" Click="reTry_Click" Style="{StaticResource MaterialDesignPaperSecondaryButton}">
+                <Button.Content>
+                    <StackPanel Orientation="Horizontal">
+                        <fa:ImageAwesome Icon="ArrowLeft" VerticalAlignment="Center" Margin="5"/>
+                        <TextBlock Text="重新載入" VerticalAlignment="Center"/>
+                    </StackPanel>
+                </Button.Content>
+            </Button>
+            <Button x:Name="close" Width="200" Height="40" Margin="0 10" Click="close_Click" Style="{StaticResource MaterialDesignPaperSecondaryButton}">
+                <Button.Content>
+                    <StackPanel Orientation="Horizontal">
+                        <fa:ImageAwesome Icon="Stop" VerticalAlignment="Center" Margin="5"/>
+                        <TextBlock Text="關閉應用程序" VerticalAlignment="Center"/> 
+                    </StackPanel>
+                </Button.Content>
+            </Button>
+        </StackPanel>
+    </Grid>
+    <!-- #endregion End of main content -->
+</Window>

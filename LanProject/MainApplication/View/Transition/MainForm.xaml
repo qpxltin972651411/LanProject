@@ -1,0 +1,380 @@
+﻿<UserControl x:Class="LanProject.MainApplication.View.Transition.MainForm"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:LanProject.MainApplication.View.Transition"
+             xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+             xmlns:domain="clr-namespace:LanProject.MainApplication.Domain"
+             xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
+             xmlns:behavior="clr-namespace:LanProject.MainApplication.ValidationExceptionBehavior"
+             mc:Ignorable="d" 
+             d:DesignHeight="450" d:DesignWidth="800">
+    <i:Interaction.Behaviors>
+        <behavior:ValidationExceptionForForm />
+    </i:Interaction.Behaviors>
+    <materialDesign:ColorZone VerticalAlignment="Stretch" HorizontalAlignment="Stretch" VerticalContentAlignment="Stretch" Margin="10">
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="1*"/>
+                <RowDefinition Height="8*"/>
+                <RowDefinition Height="1*"/>
+            </Grid.RowDefinitions>
+            <!-- top -->
+            <Grid Grid.Row="0" Margin="0 10">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="*" />
+                    <RowDefinition Height="*" />
+                    <RowDefinition Height="auto" />
+                </Grid.RowDefinitions>
+                <Grid Grid.Row="0">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="3*" />
+                        <ColumnDefinition Width="4*" />
+                        <ColumnDefinition Width="3*" />
+                    </Grid.ColumnDefinitions>
+                    <TextBlock Grid.Column="0" Margin="10,0,0,0" Text="填寫表單" Style="{StaticResource MaterialDesignCaptionTextBlock}" HorizontalAlignment="Left"/>
+                    <TextBlock Grid.Column="2" Margin="0 10" FontWeight="SemiBold" FontSize="12" HorizontalAlignment="Right">
+                        <TextBlock.Style>
+                            <Style TargetType="{x:Type TextBlock}">
+                                <Setter Property="Text" Value="請選擇表單類別"/>
+                                <Style.Triggers>
+                                    <DataTrigger Binding="{Binding NewForm.FirstPage.Type}" Value="1" >
+                                        <Setter Property="Text" Value="你已選擇 請款單"/>
+                                    </DataTrigger>
+                                    <DataTrigger Binding="{Binding NewForm.FirstPage.Type}" Value="0" >
+                                        <Setter Property="Text" Value="你已選擇 報價單"/>
+                                    </DataTrigger>
+                                </Style.Triggers>
+                            </Style>
+                        </TextBlock.Style>
+                    </TextBlock>
+                </Grid>
+                <Grid Grid.Row="1" HorizontalAlignment="Right" VerticalAlignment="Top">
+                    <StackPanel>
+                        <TextBlock FontWeight="SemiBold" FontSize="12">
+                            <TextBlock.Text>
+                                <MultiBinding StringFormat="{}你已選擇 {0} ({1}) ({2})">
+                                    <Binding Path="NewForm.SecondPage.Detail.Name" />
+                                    <Binding Path="NewForm.SecondPage.Detail.Cel" />
+                                    <Binding Path="NewForm.SecondPage.Detail.DisplayTax" />
+                                </MultiBinding>
+                            </TextBlock.Text>
+                        </TextBlock>
+                    </StackPanel>
+                </Grid>
+                <Grid Grid.Row="2" HorizontalAlignment="Right" VerticalAlignment="Top">
+                    <StackPanel>
+                        <TextBlock FontWeight="SemiBold" FontSize="12">
+                            <TextBlock.Text>
+                                <MultiBinding StringFormat="{}你已選擇 {0} ({1}) ({2})">
+                                    <Binding Path="NewForm.ThirdPage.Detail.Name" />
+                                    <Binding Path="NewForm.ThirdPage.Detail.Cel" />
+                                    <Binding Path="NewForm.ThirdPage.Detail.DisplayTax" />
+                                </MultiBinding>
+                            </TextBlock.Text>
+                        </TextBlock>
+                    </StackPanel>
+                </Grid>
+            </Grid>
+            <!-- end top -->
+            <StackPanel Grid.Row="1">
+
+                <Border BorderBrush="{StaticResource AttentionToActionBrush}" BorderThickness="2" CornerRadius="100">
+                    <Grid>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="1*"/>
+                            <RowDefinition Height="*"/>
+                            <RowDefinition Height="auto"/>
+                        </Grid.RowDefinitions>
+                        <Grid Grid.Row="0">
+                            <TextBlock Text="工程地點" HorizontalAlignment="Center" Style="{StaticResource MaterialDesignBody1TextBlock}" Margin="0,10"/>
+                        </Grid>
+                        <Grid Grid.Row="1" Margin="0,10">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="5*"/>
+                                <ColumnDefinition Width="5*"/>
+                            </Grid.ColumnDefinitions>
+                            <ComboBox Grid.Column="0" MinWidth="145" HorizontalAlignment="Center" VerticalAlignment="Center"
+                                    Style="{StaticResource MaterialDesignFilledComboBox}" materialDesign:HintAssist.Hint="縣市"
+                                    ItemsSource="{Binding NewForm.FourthPage.Country,UpdateSourceTrigger=PropertyChanged}"
+                                    materialDesign:ValidationAssist.FontSize="12">
+                                <ComboBox.SelectedItem>
+                                    <Binding Path="NewForm.FourthPage.Location.Country" UpdateSourceTrigger="PropertyChanged" NotifyOnValidationError="True">
+                                        <Binding.ValidationRules>
+                                            <domain:AddressComboPickValidationRule ValidatesOnTargetUpdated="True" />
+                                        </Binding.ValidationRules>
+                                    </Binding>
+                                </ComboBox.SelectedItem>
+                            </ComboBox>
+                            <ComboBox Grid.Column="1" MinWidth="145" HorizontalAlignment="Center" VerticalAlignment="Center"
+                                Style="{StaticResource MaterialDesignFilledComboBox}" materialDesign:HintAssist.Hint="地區"
+                                ItemsSource="{Binding NewForm.FourthPage.City,UpdateSourceTrigger=PropertyChanged}"
+                                materialDesign:ValidationAssist.FontSize="12">
+                                <ComboBox.SelectedItem>
+                                    <Binding Path="NewForm.FourthPage.Location.City" UpdateSourceTrigger="PropertyChanged" NotifyOnValidationError="True">
+                                        <Binding.ValidationRules>
+                                            <domain:AddressComboPickValidationRule ValidatesOnTargetUpdated="True" />
+                                        </Binding.ValidationRules>
+                                    </Binding>
+                                </ComboBox.SelectedItem>
+                            </ComboBox>
+                        </Grid>
+                        <Grid Grid.Row="2" Margin="0,25">
+                            <TextBox FontSize="16" MaxLength="40" MinWidth="300" MaxWidth="600" x:Name="workaddress"
+                                Style="{StaticResource MaterialDesignFilledTextBox}" materialDesign:HintAssist.Hint="詳細地址"
+                                materialDesign:TransitionAssist.DisableTransitions="True" 
+                                materialDesign:ValidationAssist.FontSize="12">
+                                <TextBox.Text>
+                                    <Binding Path="NewForm.FourthPage.Location.Address" UpdateSourceTrigger="PropertyChanged" NotifyOnValidationError="True">
+                                        <Binding.ValidationRules>
+                                            <domain:NotEmptyValidationRule ValidatesOnTargetUpdated="True" />
+                                        </Binding.ValidationRules>
+                                    </Binding>
+                                </TextBox.Text>
+                            </TextBox>
+                        </Grid>
+                    </Grid>
+                </Border>
+
+                <Border BorderBrush="{StaticResource AttentionToActionBrush}" BorderThickness="2" Margin="0,20" CornerRadius="30">
+                    <StackPanel Margin="0,20">
+                        <Button x:Name="createRow" MaxWidth="100" Content="新增一列" Click="createRow_Click" Style="{StaticResource MaterialDesignRaisedAccentButton}"/>
+                        <ListView ItemsSource="{Binding NewForm.FourthPage.ProductList,UpdateSourceTrigger=PropertyChanged}" Style="{StaticResource MaterialDesignListView}">
+                            <ListView.ItemContainerStyle>
+                                <Style TargetType="ListViewItem">
+                                    <Setter Property="Height" Value="80" />
+                                    <Setter Property="HorizontalContentAlignment" Value="Center" />
+                                    <Setter Property="VerticalContentAlignment" Value="Center" />
+                                    <Setter Property="Template">
+                                        <Setter.Value>
+                                            <ControlTemplate TargetType="ListBoxItem">
+                                                <Border x:Name="Border"
+                                                    Padding="0,0,0,0"
+                                                    BorderThickness="0,0,1,1"
+                                                    Background="{TemplateBinding Background}"
+                                                    BorderBrush="{StaticResource MaterialDesignDivider}"
+                                                    SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}">
+                                                    <GridViewRowPresenter VerticalAlignment="{TemplateBinding VerticalContentAlignment}" />
+                                                </Border>
+                                            </ControlTemplate>
+                                        </Setter.Value>
+                                    </Setter>
+                                    <Style.Triggers>
+                                        <Trigger Property="IsKeyboardFocusWithin" Value="True">
+                                            <Setter Property="BorderBrush" Value="{StaticResource MaterialDesignTextBoxBorder}" />
+                                        </Trigger>
+                                        <Trigger Property="IsSelected" Value="True">
+                                            <Setter Property="Background" Value="{StaticResource MaterialDesignSelection}" />
+                                        </Trigger>
+                                        <Trigger Property="IsMouseOver" Value="True">
+                                            <Setter Property="Background" Value="{StaticResource MaterialDesignDivider}" />
+                                        </Trigger>
+                                        <MultiTrigger>
+                                            <MultiTrigger.Conditions>
+                                                <Condition Property="IsSelected" Value="True" />
+                                                <Condition Property="Selector.IsSelectionActive" Value="False" />
+                                            </MultiTrigger.Conditions>
+                                            <Setter Property="Background" Value="{StaticResource MaterialDesignSelection}" />
+                                        </MultiTrigger>
+                                        <MultiTrigger>
+                                            <MultiTrigger.Conditions>
+                                                <Condition Property="IsSelected" Value="True" />
+                                                <Condition Property="Selector.IsSelectionActive" Value="True" />
+                                            </MultiTrigger.Conditions>
+                                            <Setter Property="Foreground" Value="{StaticResource MaterialDesignBody}" />
+                                        </MultiTrigger>
+                                        <Trigger Property="IsEnabled" Value="false">
+                                            <Setter Property="Opacity" Value=".56" />
+                                        </Trigger>
+                                        <Trigger Property="ItemsControl.AlternationIndex" Value="1">
+                                            <Setter Property="Background" Value="{StaticResource MaterialDesignDivider}" />
+                                        </Trigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </ListView.ItemContainerStyle>
+                            <ListView.View>
+                                <GridView>
+                                    <GridViewColumn Header="複製">
+                                        <GridViewColumn.CellTemplate>
+                                            <DataTemplate>
+                                                <Button MaxWidth="60" x:Name="cloneRow" Click="cloneRow_Click" Content="複製" Style="{StaticResource MaterialDesignRaisedAccentButton}"/>
+                                            </DataTemplate>
+                                        </GridViewColumn.CellTemplate>
+                                    </GridViewColumn>
+                                    <GridViewColumn Header="刪除">
+                                        <GridViewColumn.CellTemplate>
+                                            <DataTemplate>
+                                                <Button MaxWidth="60" x:Name="deleteRow" Click="deleteRow_Click" Content="刪除" Style="{StaticResource MaterialDesignRaisedAccentButton}" />
+                                            </DataTemplate>
+                                        </GridViewColumn.CellTemplate>
+                                    </GridViewColumn>
+                                    <GridViewColumn Header="品名">
+                                        <GridViewColumn.CellTemplate>
+                                            <DataTemplate>
+                                                <TextBox MinWidth="80" Style="{StaticResource MaterialDesignFilledTextBox}" ToolTip="{Binding ID,UpdateSourceTrigger=PropertyChanged}"
+                                                    HorizontalAlignment="Center" VerticalAlignment="Center" HorizontalContentAlignment="Center">
+                                                    <TextBox.Text>
+                                                        <Binding Path="Name" UpdateSourceTrigger="PropertyChanged" NotifyOnValidationError="True">
+                                                            <Binding.ValidationRules>
+                                                                <domain:NotEmptyValidationRule ValidatesOnTargetUpdated="True" />
+                                                            </Binding.ValidationRules>
+                                                        </Binding>
+                                                    </TextBox.Text>
+                                                </TextBox>
+                                            </DataTemplate>
+                                        </GridViewColumn.CellTemplate>
+                                    </GridViewColumn>
+                                    <GridViewColumn Header="長度">
+                                        <GridViewColumn.CellTemplate>
+                                            <DataTemplate>
+                                                <TextBox MinWidth="75" HorizontalAlignment="Center" VerticalAlignment="Center" HorizontalContentAlignment="Center" ToolTip="{Binding ID,UpdateSourceTrigger=PropertyChanged,StringFormat={}Length_{0}}">
+                                                    <TextBox.Text>
+                                                        <Binding Path="Length" UpdateSourceTrigger="PropertyChanged" StringFormat="{}{0:F2}" NotifyOnValidationError="True">
+                                                            <Binding.ValidationRules>
+                                                                <domain:MoneyNotEmptyValidationRule ValidatesOnTargetUpdated="True" />
+                                                            </Binding.ValidationRules>
+                                                        </Binding>
+                                                    </TextBox.Text>
+                                                </TextBox>
+                                            </DataTemplate>
+                                        </GridViewColumn.CellTemplate>
+                                    </GridViewColumn>
+                                    <GridViewColumn Header="寬度">
+                                        <GridViewColumn.CellTemplate>
+                                            <DataTemplate>
+                                                <TextBox MinWidth="75" HorizontalAlignment="Center" VerticalAlignment="Center" HorizontalContentAlignment="Center" ToolTip="{Binding ID,UpdateSourceTrigger=PropertyChanged}">
+                                                    <TextBox.Text>
+                                                        <Binding Path="Width" UpdateSourceTrigger="PropertyChanged" StringFormat="{}{0:F2}" NotifyOnValidationError="True">
+                                                            <Binding.ValidationRules>
+                                                                <domain:MoneyNotEmptyValidationRule ValidatesOnTargetUpdated="True" />
+                                                            </Binding.ValidationRules>
+                                                        </Binding>
+                                                    </TextBox.Text>
+                                                </TextBox>
+                                            </DataTemplate>
+                                        </GridViewColumn.CellTemplate>
+                                    </GridViewColumn>
+                                    <GridViewColumn Header="數量">
+                                        <GridViewColumn.CellTemplate>
+                                            <DataTemplate>
+                                                <TextBox MinWidth="75" HorizontalAlignment="Center" VerticalAlignment="Center" Focusable="False" HorizontalContentAlignment="Center" Text="{Binding Area,UpdateSourceTrigger=PropertyChanged}" />
+                                            </DataTemplate>
+                                        </GridViewColumn.CellTemplate>
+                                    </GridViewColumn>
+                                    <GridViewColumn Header="鐵模單價">
+                                        <GridViewColumn.CellTemplate>
+                                            <DataTemplate>
+                                                <TextBox MinWidth="75" HorizontalAlignment="Center" VerticalAlignment="Center" HorizontalContentAlignment="Center" ToolTip="{Binding ID,UpdateSourceTrigger=PropertyChanged}">
+                                                    <TextBox.Text>
+                                                        <Binding Path="Ironmold" UpdateSourceTrigger="PropertyChanged" StringFormat="{}{0:F2}" NotifyOnValidationError="True">
+                                                            <Binding.ValidationRules>
+                                                                <domain:MoneyNotEmptyValidationRule ValidatesOnTargetUpdated="True" />
+                                                            </Binding.ValidationRules>
+                                                        </Binding>
+                                                    </TextBox.Text>
+                                                </TextBox>
+                                            </DataTemplate>
+                                        </GridViewColumn.CellTemplate>
+                                    </GridViewColumn>
+                                    <GridViewColumn Header="粉體塗裝">
+                                        <GridViewColumn.CellTemplate>
+                                            <DataTemplate>
+                                                <TextBox MinWidth="75" HorizontalAlignment="Center" VerticalAlignment="Center" HorizontalContentAlignment="Center" ToolTip="{Binding ID,UpdateSourceTrigger=PropertyChanged}">
+                                                    <TextBox.Text>
+                                                        <Binding Path="Powercoating" UpdateSourceTrigger="PropertyChanged" StringFormat="{}{0:F2}" NotifyOnValidationError="True">
+                                                            <Binding.ValidationRules>
+                                                                <domain:MoneyValidationRule ValidatesOnTargetUpdated="True" />
+                                                            </Binding.ValidationRules>
+                                                        </Binding>
+                                                    </TextBox.Text>
+                                                </TextBox>
+                                            </DataTemplate>
+                                        </GridViewColumn.CellTemplate>
+                                    </GridViewColumn>
+                                    <GridViewColumn Header="鐵擋單價">
+                                        <GridViewColumn.CellTemplate>
+                                            <DataTemplate>
+                                                <TextBox MinWidth="75" HorizontalAlignment="Center" VerticalAlignment="Center" HorizontalContentAlignment="Center" ToolTip="{Binding ID,UpdateSourceTrigger=PropertyChanged}">
+                                                    <TextBox.Text>
+                                                        <Binding Path="Ironslips" UpdateSourceTrigger="PropertyChanged" StringFormat="{}{0:F2}" NotifyOnValidationError="True">
+                                                            <Binding.ValidationRules>
+                                                                <domain:MoneyValidationRule ValidatesOnTargetUpdated="True" />
+                                                            </Binding.ValidationRules>
+                                                        </Binding>
+                                                    </TextBox.Text>
+                                                </TextBox>
+                                            </DataTemplate>
+                                        </GridViewColumn.CellTemplate>
+                                    </GridViewColumn>
+                                    <GridViewColumn Header="鏍母單價">
+                                        <GridViewColumn.CellTemplate>
+                                            <DataTemplate>
+                                                <TextBox MinWidth="75" HorizontalAlignment="Center" VerticalAlignment="Center" HorizontalContentAlignment="Center" ToolTip="{Binding ID,UpdateSourceTrigger=PropertyChanged}">
+                                                    <TextBox.Text>
+                                                        <Binding Path="Nut" UpdateSourceTrigger="PropertyChanged" StringFormat="{}{0:F2}" NotifyOnValidationError="True">
+                                                            <Binding.ValidationRules>
+                                                                <domain:MoneyValidationRule ValidatesOnTargetUpdated="True" />
+                                                            </Binding.ValidationRules>
+                                                        </Binding>
+                                                    </TextBox.Text>
+                                                </TextBox>
+                                            </DataTemplate>
+                                        </GridViewColumn.CellTemplate>
+                                    </GridViewColumn>
+                                    <GridViewColumn Header="總計">
+                                        <GridViewColumn.CellTemplate>
+                                            <DataTemplate>
+                                                <TextBox MinWidth="75" HorizontalAlignment="Center" Focusable="False" VerticalAlignment="Center" HorizontalContentAlignment="Center" Text="{Binding Total,UpdateSourceTrigger=PropertyChanged}" />
+                                            </DataTemplate>
+                                        </GridViewColumn.CellTemplate>
+                                    </GridViewColumn>
+                                </GridView>
+                            </ListView.View>
+                        </ListView>
+                        <Border Style="{StaticResource HorizontalDividerBorder}" Margin="0,25,0,0"/>
+                        <StackPanel HorizontalAlignment="Right" Margin="25,10,25,0">
+                            <TextBlock HorizontalAlignment="Left" Style="{StaticResource MaterialDesignHeadline5TextBlock}">
+                                <TextBlock.Text>
+                                    <MultiBinding StringFormat=" 稅前合計 : NT {0:c}" UpdateSourceTrigger="PropertyChanged">
+                                        <Binding Path="NewForm.FourthPage.Total" />
+                                    </MultiBinding>
+                                </TextBlock.Text>
+                            </TextBlock>
+                            <TextBlock HorizontalAlignment="Left" Style="{StaticResource MaterialDesignHeadline5TextBlock}">
+                                <TextBlock.Text>
+                                    <MultiBinding StringFormat="5%營業稅 : NT {0:c}" UpdateSourceTrigger="PropertyChanged">
+                                        <Binding Path="NewForm.FourthPage.Fivepercent" />
+                                    </MultiBinding>
+                                </TextBlock.Text>
+                            </TextBlock>
+                            <TextBlock HorizontalAlignment="Left" Style="{StaticResource MaterialDesignHeadline5TextBlock}">
+                                <TextBlock.Text>
+                                    <MultiBinding StringFormat="         合計 : NT {0:c}" UpdateSourceTrigger="PropertyChanged">
+                                        <Binding Path="NewForm.FourthPage.Paypal" />
+                                    </MultiBinding>
+                                </TextBlock.Text>
+                            </TextBlock>
+                        </StackPanel>
+                    </StackPanel>
+                </Border>
+            </StackPanel>
+            <Grid Grid.Row="2" Margin="20">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="1*" />
+                    <ColumnDefinition Width="5*" />
+                    <ColumnDefinition Width="3*" />
+                    <ColumnDefinition Width="1*" />
+                </Grid.ColumnDefinitions>
+                <Button Grid.Column="0" Style="{StaticResource MaterialDesignPaperSecondaryButton}"
+                    Command="{x:Static materialDesign:Transitioner.MovePreviousCommand}" Cursor="Hand">
+                    <materialDesign:PackIcon Kind="StepBackward" />
+                </Button>
+                <TextBlock Grid.Column="2" Text="{Binding NewForm.FourthPage.Error,UpdateSourceTrigger=PropertyChanged}" Margin="20,0" Style="{StaticResource MaterialDesignCaptionTextBlock}" HorizontalAlignment="Right" VerticalAlignment="Center" Foreground="Red"/>
+                <Button x:Name="next" Grid.Column="3" Style="{StaticResource MaterialDesignPaperSecondaryButton}" Click="next_Click"
+                    IsEnabled="{Binding NewForm.FourthPage.Allow,UpdateSourceTrigger=PropertyChanged}" Cursor="Hand"
+                    Content="下一步"/>
+            </Grid>
+        </Grid>
+    </materialDesign:ColorZone>
+</UserControl>
